@@ -1,0 +1,36 @@
+rules_version = '2';
+service firebase.storage {
+  match /b/{bucket}/o {
+    
+    function isAdmin() {
+      return request.auth != null && (
+        request.auth.token.email.matches('(?i)(admin@nexoradns\\.com|zain@nexoradns\\.com)') ||
+        request.auth.token.role == 'admin'
+      );
+    }
+
+    // Public brand assets and covers
+    match /public/{allPaths=**} {
+      allow read: if true;
+      allow write: if isAdmin()
+        && request.resource.size < 5 * 1024 * 1024
+        && request.resource.contentType.matches('image/(png|jpeg|webp|svg\\+xml|gif)');
+    }
+
+    // Encrypted Apple iOS DoH profiles
+    match /profiles/{profileId} {
+      allow read: if true;
+      allow write: if isAdmin()
+        && request.resource.size < 1 * 1024 * 1024
+        && request.resource.contentType.matches('(application/x-apple-aspen-config|text/xml)');
+    }
+
+    // Customer payment receipts (upload only, admin read)
+    match /payment_proofs/{orderId}/{fileName} {
+      allow create: if request.resource.size < 4 * 1024 * 1024
+        && request.resource.contentType.matches('image/(png|jpeg|webp|pdf)');
+      allow read: if isAdmin();
+      allow delete: if isAdmin();
+    }
+  }
+}

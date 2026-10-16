@@ -1,0 +1,624 @@
+/* ==========================================================================
+   PREMIUM GAMING DNS STORE - ANIMATIONS & TRANSITIONS
+   Ultra-smooth 60fps GPU-Accelerated Animations
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. SCROLL REVEAL (Fade-up 24px with Staggering)
+   -------------------------------------------------------------------------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 650ms cubic-bezier(0.16, 1, 0.3, 1),
+              transform 650ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal.active,
+.reveal.is-revealed {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Directional Reveals */
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-24px);
+  transition: opacity 650ms cubic-bezier(0.16, 1, 0.3, 1),
+              transform 650ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-left.active,
+.reveal-left.is-revealed {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.reveal-right {
+  opacity: 0;
+  transform: translateX(24px);
+  transition: opacity 650ms cubic-bezier(0.16, 1, 0.3, 1),
+              transform 650ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-right.active,
+.reveal-right.is-revealed {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.95);
+  transition: opacity 650ms cubic-bezier(0.16, 1, 0.3, 1),
+              transform 650ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.reveal-scale.active,
+.reveal-scale.is-revealed {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Stagger Delays */
+.reveal-delay-1 { transition-delay: 100ms; }
+.reveal-delay-2 { transition-delay: 200ms; }
+.reveal-delay-3 { transition-delay: 300ms; }
+.reveal-delay-4 { transition-delay: 400ms; }
+.reveal-delay-5 { transition-delay: 500ms; }
+
+/* --------------------------------------------------------------------------
+   2. CARD HOVER & 3D TILT EFFECT
+   -------------------------------------------------------------------------- */
+.glass-card,
+.server-card,
+.feature-card,
+.pricing-card,
+.platform-card {
+  transition: transform 450ms cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 450ms cubic-bezier(0.16, 1, 0.3, 1),
+              background 450ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform, box-shadow;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .glass-card-interactive:hover,
+  .server-card:hover,
+  .feature-card:hover,
+  .platform-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 45px -15px rgba(0, 0, 0, 0.7), 0 0 32px rgba(139, 92, 246, 0.2);
+  }
+
+  /* Subtle 3D Tilt Class (max 4deg) */
+  .card-tilt-hover {
+    perspective: 1000px;
+  }
+
+  .card-tilt-hover:hover {
+    transform: translateY(-4px) rotateX(2deg) rotateY(-2deg);
+  }
+
+  .pricing-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 24px 50px -15px rgba(0, 0, 0, 0.75), 0 0 35px rgba(139, 92, 246, 0.22);
+  }
+
+  .pricing-card.featured:hover {
+    transform: scale(1.05) translateY(-6px);
+    box-shadow: 0 30px 60px -15px rgba(0, 0, 0, 0.8), 0 0 45px rgba(232, 201, 135, 0.3);
+  }
+
+  .game-card {
+    transition: transform 350ms cubic-bezier(0.16, 1, 0.3, 1),
+                box-shadow 350ms cubic-bezier(0.16, 1, 0.3, 1),
+                border-color 350ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .game-card:hover {
+    transform: translateY(-4px);
+    border-color: rgba(139, 92, 246, 0.4);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5), 0 0 20px rgba(139, 92, 246, 0.15);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   3. GOLD BUTTON LIGHT SWEEP / SHINE ON HOVER
+   -------------------------------------------------------------------------- */
+.btn-gold {
+  position: relative;
+  overflow: hidden;
+  transition: transform 400ms cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 400ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-gold::after {
+  content: "";
+  position: absolute;
+  top: -60%;
+  left: -70%;
+  width: 45%;
+  height: 220%;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.45) 50%,
+    transparent 100%
+  );
+  transform: rotate(25deg);
+  transition: transform 750ms cubic-bezier(0.16, 1, 0.3, 1);
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .btn-gold:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(232, 201, 135, 0.45), 0 0 20px rgba(232, 201, 135, 0.25);
+  }
+
+  .btn-gold:hover::after {
+    transform: rotate(25deg) translateX(480%);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   4. PRESS / CLICK FEEDBACK
+   -------------------------------------------------------------------------- */
+.btn:active,
+.btn-gold:active,
+.btn-glass:active,
+.btn-outline:active,
+.glass-card-interactive:active,
+.payment-method-card:active {
+  transform: scale(0.97) !important;
+  transition-duration: 80ms !important;
+}
+
+/* --------------------------------------------------------------------------
+   5. GLASS BUTTON HOVER
+   -------------------------------------------------------------------------- */
+.btn-glass {
+  transition: transform 400ms cubic-bezier(0.16, 1, 0.3, 1),
+              background 400ms cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 400ms cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 400ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .btn-glass:hover {
+    transform: translateY(-2px);
+    background: rgba(139, 92, 246, 0.18);
+    border-color: rgba(167, 139, 250, 0.8);
+    box-shadow: 0 0 25px rgba(139, 92, 246, 0.35);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   6. MAGNETIC EFFECT PLACEHOLDER CLASS
+   -------------------------------------------------------------------------- */
+.magnetic-wrap {
+  display: inline-block;
+  position: relative;
+  will-change: transform;
+  transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.magnetic-target {
+  display: inline-block;
+  will-change: transform;
+  transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* --------------------------------------------------------------------------
+   7. LOADING SPINNER
+   -------------------------------------------------------------------------- */
+@keyframes btnSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.btn.is-loading {
+  pointer-events: none;
+  position: relative;
+  color: transparent !important;
+}
+
+.btn.is-loading::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 22px;
+  height: 22px;
+  margin: -11px 0 0 -11px;
+  border: 2px solid rgba(255, 255, 255, 0.25);
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: btnSpin 650ms linear infinite;
+}
+
+.btn-gold.is-loading::before {
+  border: 2px solid rgba(26, 26, 46, 0.2);
+  border-top-color: #1A1A2E;
+}
+
+.spinner {
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-top-color: var(--accent-gold);
+  border-radius: 50%;
+  animation: btnSpin 650ms linear infinite;
+}
+
+/* --------------------------------------------------------------------------
+   8. SUCCESS CHECKMARK ANIMATION
+   -------------------------------------------------------------------------- */
+@keyframes checkmarkPop {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  60% {
+    transform: scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes strokeCheck {
+  0% { stroke-dashoffset: 24; }
+  100% { stroke-dashoffset: 0; }
+}
+
+.btn.is-success {
+  background: var(--success) !important;
+  color: #07070D !important;
+  border-color: var(--success) !important;
+}
+
+.checkmark-anim {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  animation: checkmarkPop 400ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.checkmark-icon svg path {
+  stroke-dasharray: 24;
+  stroke-dashoffset: 24;
+  animation: strokeCheck 500ms ease-out forwards;
+}
+
+/* --------------------------------------------------------------------------
+   9. COUNTER COUNT-UP TRIGGER CLASS
+   -------------------------------------------------------------------------- */
+.count-up {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 500ms ease-out, transform 500ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+
+.count-up.counted {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* --------------------------------------------------------------------------
+   10. TOAST SLIDE-IN & AUTO-DISMISS
+   -------------------------------------------------------------------------- */
+@keyframes toastSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(32px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes toastSlideOut {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(24px) scale(0.96);
+  }
+}
+
+.toast {
+  animation: toastSlideIn 400ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  will-change: opacity, transform;
+}
+
+.toast.dismissing {
+  animation: toastSlideOut 350ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+/* --------------------------------------------------------------------------
+   11. PAGE TRANSITIONS
+   -------------------------------------------------------------------------- */
+@keyframes pageFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-transition {
+  animation: pageFadeIn 250ms ease-out forwards;
+  will-change: opacity, transform;
+}
+
+/* --------------------------------------------------------------------------
+   12. NAVBAR SCROLL TRANSITION
+   -------------------------------------------------------------------------- */
+.navbar {
+  transition: background 400ms cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 400ms cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 400ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* --------------------------------------------------------------------------
+   13. FAQ ACCORDION OPEN/CLOSE
+   -------------------------------------------------------------------------- */
+.faq-answer {
+  transition: max-height 450ms cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 350ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: max-height, opacity;
+}
+
+.faq-icon {
+  transition: transform 400ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+/* --------------------------------------------------------------------------
+   14. FLOATING ORBS (Slow Moving Background Blobs)
+   -------------------------------------------------------------------------- */
+.bg-orbs-container {
+  display: none !important;
+}
+
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: 0.16;
+  pointer-events: none;
+  will-change: transform;
+}
+
+@keyframes floatOrb1 {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(70px, 90px) scale(1.12); }
+  100% { transform: translate(-50px, 45px) scale(0.92); }
+}
+
+@keyframes floatOrb2 {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-90px, -70px) scale(1.15); }
+  100% { transform: translate(60px, -45px) scale(0.88); }
+}
+
+@keyframes floatOrb3 {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(65px, -60px) scale(1.08); }
+  100% { transform: translate(-35px, 75px) scale(0.94); }
+}
+
+@keyframes floatOrb4 {
+  0% { transform: translate(0, 0) scale(1); }
+  50% { transform: translate(-45px, 80px) scale(1.1); }
+  100% { transform: translate(50px, -35px) scale(1.02); }
+}
+
+.bg-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+  pointer-events: none;
+  will-change: transform;
+}
+
+.orb-violet-1 {
+  top: -5%;
+  left: 15%;
+  width: 550px;
+  height: 550px;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.18) 0%, transparent 70%);
+  animation: floatOrb1 20s ease-in-out infinite alternate;
+}
+
+.orb-violet-2 {
+  top: 35%;
+  right: 5%;
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle, rgba(139, 92, 246, 0.14) 0%, transparent 70%);
+  animation: floatOrb2 25s ease-in-out infinite alternate;
+}
+
+/* --------------------------------------------------------------------------
+   15. NETWORK LINES EFFECT (Subtle Cyber Grid)
+   -------------------------------------------------------------------------- */
+.bg-network-grid {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.035;
+  background-size: 60px 60px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.4) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.4) 1px, transparent 1px);
+  will-change: transform;
+  animation: gridScroll 45s linear infinite;
+}
+
+@keyframes gridScroll {
+  from { transform: translateY(0); }
+  to { transform: translateY(60px); }
+}
+
+/* --------------------------------------------------------------------------
+   16. PULSE FOR ONLINE BADGES
+   -------------------------------------------------------------------------- */
+@keyframes pulsePing {
+  0% {
+    transform: scale(1);
+    opacity: 0.85;
+  }
+  100% {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+@keyframes pulseGlow {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.55;
+    transform: scale(0.9);
+  }
+}
+
+.status-pulse-dot {
+  animation: pulseGlow 2s ease-in-out infinite;
+}
+
+.badge-pulse-dot::after {
+  animation: pulsePing 2s cubic-bezier(0, 0, 0.2, 1) infinite;
+}
+
+/* --------------------------------------------------------------------------
+   17. RIPPLE EFFECT CLASS
+   -------------------------------------------------------------------------- */
+.ripple-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  transform: scale(0);
+  background-color: rgba(255, 255, 255, 0.3);
+  pointer-events: none;
+  animation: rippleEffect 600ms linear forwards;
+}
+
+@keyframes rippleEffect {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   18. SKELETON SHIMMER ANIMATION
+   -------------------------------------------------------------------------- */
+@keyframes skeletonShimmer {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+.skeleton {
+  animation: skeletonShimmer 2s ease-in-out infinite;
+  will-change: background-position;
+}
+
+/* --------------------------------------------------------------------------
+   19. PREFERS-REDUCED-MOTION (Accessibility Override)
+   -------------------------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .reveal,
+  .reveal-left,
+  .reveal-right,
+  .reveal-scale {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+
+  .count-up {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .orb,
+  .bg-network-grid,
+  .status-pulse-dot,
+  .badge-pulse-dot::after,
+  .skeleton {
+    animation: none !important;
+  }
+
+  .btn-gold::after {
+    display: none !important;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   20. MOBILE OVERRIDES (Touch Devices Tap Feedback)
+   -------------------------------------------------------------------------- */
+@media (hover: none) and (pointer: coarse) {
+  /* Replace hover lift with smooth tap feedback */
+  .glass-card-interactive:hover,
+  .server-card:hover,
+  .feature-card:hover,
+  .platform-card:hover,
+  .pricing-card:hover,
+  .game-card:hover,
+  .btn-gold:hover,
+  .btn-glass:hover {
+    transform: none;
+    box-shadow: inherit;
+  }
+
+  .glass-card-interactive:active,
+  .server-card:active,
+  .btn-gold:active,
+  .btn-glass:active {
+    transform: scale(0.98);
+    transition-duration: 100ms;
+  }
+
+  .btn-gold::after {
+    display: none;
+  }
+}

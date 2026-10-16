@@ -1,0 +1,2099 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Checkout — YourBrand</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <!-- External Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/animations.css">
+
+  <!-- Self-contained Checkout Flow Styles (Aligned with Design System) -->
+  <style>
+    /* CSS Variables Design Tokens */
+    :root {
+      --bg-base: #07070D;
+      --bg-mid: #0D0B1A;
+      --bg-deep: #120E24;
+      --primary: #8B5CF6;
+      --secondary: #7DD3FC;
+      --accent-gold: #E8C987;
+      --accent-gold-dark: #D9B36A;
+      --accent-gold-light: #F3D9A0;
+      --success: #34D399;
+      --danger: #EF4444;
+      --text-primary: #F5F5FA;
+      --text-muted: #8E92A8;
+      --glass-bg: rgba(255, 255, 255, 0.05);
+      --glass-border-top: rgba(255, 255, 255, 0.16);
+      --glass-border-bottom: rgba(255, 255, 255, 0.04);
+      --radius-lg: 24px;
+      --radius-md: 16px;
+      --radius-sm: 10px;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-base);
+      color: var(--text-primary);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.7;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 15% 20%, rgba(139, 92, 246, 0.15) 0%, transparent 45%),
+        radial-gradient(circle at 85% 65%, rgba(125, 211, 252, 0.12) 0%, transparent 50%),
+        radial-gradient(circle at 50% 90%, rgba(232, 201, 135, 0.08) 0%, transparent 55%);
+      background-attachment: fixed;
+    }
+
+    h1, h2, h3, h4, h5, h6, .font-rajdhani {
+      font-family: 'Rajdhani', sans-serif;
+      letter-spacing: 0.04em;
+      line-height: 1.25;
+      color: var(--text-primary);
+      text-transform: uppercase;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.25s ease;
+    }
+
+    img {
+      max-width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px;
+      width: 100%;
+    }
+
+    /* ─── Glass Card Pattern ─── */
+    .glass-card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(24px) saturate(140%);
+      -webkit-backdrop-filter: blur(24px) saturate(140%);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-lg);
+      position: relative;
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease, border-color 0.35s ease;
+    }
+
+    /* ─── Buttons ─── */
+    .btn-gold {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: linear-gradient(135deg, var(--accent-gold-light), var(--accent-gold-dark));
+      color: #1a1a2e;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 14px 32px;
+      border-radius: 12px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(232, 201, 135, 0.25);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .btn-gold:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 28px rgba(232, 201, 135, 0.45);
+      filter: brightness(1.05);
+    }
+    .btn-gold:active {
+      transform: translateY(0);
+    }
+    .btn-gold:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-primary);
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      padding: 13px 28px;
+      border-radius: 12px;
+      border: 1px solid var(--primary);
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    .btn-secondary:hover {
+      background: rgba(139, 92, 246, 0.2);
+      border-color: #a78bfa;
+      color: #ffffff;
+      transform: translateY(-2px);
+    }
+
+    .btn-ghost {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 24px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.95rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+      border-radius: 12px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      transition: all 0.2s ease;
+    }
+    .btn-ghost:hover {
+      color: var(--text-primary);
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    /* ─── Shared Navbar ─── */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background: rgba(7, 7, 13, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 16px 0;
+    }
+    .navbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-logo {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.6rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .nav-logo::before {
+      content: '';
+      display: inline-block;
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--accent-gold);
+      box-shadow: 0 0 12px var(--accent-gold);
+    }
+    .nav-menu {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+    .nav-link {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      position: relative;
+      padding: 6px 0;
+    }
+    .nav-link:hover, .nav-link.active {
+      color: var(--text-primary);
+    }
+    .nav-link.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: var(--accent-gold);
+    }
+    .nav-cta {
+      padding: 10px 22px;
+      font-size: 0.95rem;
+      margin-left: 8px;
+    }
+    .nav-toggle {
+      display: none;
+      flex-direction: column;
+      gap: 6px;
+      background: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+    }
+    .nav-toggle span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background-color: var(--text-primary);
+      transition: all 0.3s ease;
+    }
+
+    /* ─── Page Header & Progress ─── */
+    .checkout-main {
+      flex: 1;
+      padding: 60px 0 100px;
+    }
+    .checkout-header {
+      text-align: center;
+      max-width: 680px;
+      margin: 0 auto 40px;
+    }
+    .checkout-header .badge-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(139, 92, 246, 0.15);
+      border: 1px solid rgba(139, 92, 246, 0.3);
+      color: var(--secondary);
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      font-size: 0.85rem;
+      padding: 6px 14px;
+      border-radius: 999px;
+      margin-bottom: 14px;
+      text-transform: uppercase;
+    }
+    .checkout-title {
+      font-size: clamp(2rem, 4vw, 2.75rem);
+      margin-bottom: 12px;
+    }
+    .checkout-subtitle {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+    }
+
+    /* ─── Multi-step Progress Bar ─── */
+    .checkout-progress {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      max-width: 640px;
+      margin: 0 auto 50px;
+      padding: 18px 24px;
+      background: rgba(18, 14, 36, 0.6);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 999px;
+    }
+    .progress-step {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: default;
+      transition: all 0.3s ease;
+    }
+    .progress-step.completed {
+      cursor: pointer;
+    }
+    .step-number {
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-muted);
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      transition: all 0.3s ease;
+    }
+    .step-label {
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      transition: color 0.3s ease;
+    }
+    .progress-step.active .step-number {
+      background: var(--accent-gold);
+      color: #1a1a2e;
+      border-color: var(--accent-gold);
+      box-shadow: 0 0 16px rgba(232, 201, 135, 0.6);
+    }
+    .progress-step.active .step-label {
+      color: var(--text-primary);
+    }
+    .progress-step.completed .step-number {
+      background: rgba(52, 211, 153, 0.2);
+      color: var(--success);
+      border-color: var(--success);
+    }
+    .progress-step.completed .step-label {
+      color: var(--success);
+    }
+    .progress-line {
+      flex: 1;
+      height: 2px;
+      background: rgba(255, 255, 255, 0.1);
+      margin: 0 14px;
+      min-width: 24px;
+      transition: background 0.3s ease;
+    }
+    .progress-line.completed {
+      background: var(--success);
+    }
+
+    /* ─── Step Content Sections ─── */
+    .checkout-step {
+      display: none;
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.4s ease, transform 0.4s ease;
+    }
+    .checkout-step.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .step-section-header {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+    .step-section-header h2 {
+      font-size: 1.85rem;
+      margin-bottom: 8px;
+    }
+    .step-section-header p {
+      color: var(--text-muted);
+      font-size: 1rem;
+    }
+
+    /* ─── Step 1: Plan Cards ─── */
+    .plans-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 24px;
+      margin-bottom: 40px;
+    }
+    .plan-card {
+      padding: 32px 24px;
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+    .plan-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 32px rgba(139, 92, 246, 0.15);
+      border-color: rgba(139, 92, 246, 0.4);
+    }
+    .plan-card.selected {
+      border-color: var(--accent-gold);
+      box-shadow: 0 0 28px rgba(232, 201, 135, 0.25);
+      background: rgba(232, 201, 135, 0.04);
+    }
+    .plan-card.recommended::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--primary), var(--accent-gold));
+    }
+    .plan-badge {
+      position: absolute;
+      top: 16px;
+      right: 18px;
+      background: linear-gradient(135deg, var(--accent-gold-light), var(--accent-gold-dark));
+      color: #1a1a2e;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 999px;
+    }
+    .plan-card-header {
+      margin-bottom: 16px;
+    }
+    .plan-name {
+      font-size: 1.5rem;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+    .plan-duration {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+    .plan-pricing {
+      margin-bottom: 20px;
+    }
+    .plan-price-wrap {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+    }
+    .plan-price-wrap .currency {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--accent-gold);
+    }
+    .plan-price-wrap .amount {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 2.6rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      line-height: 1;
+    }
+    .plan-price-wrap .period {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+    .plan-savings-tag {
+      display: inline-block;
+      margin-top: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--success);
+      background: rgba(52, 211, 153, 0.12);
+      padding: 2px 8px;
+      border-radius: 6px;
+    }
+    .plan-divider {
+      height: 1px;
+      background: rgba(255, 255, 255, 0.08);
+      margin-bottom: 20px;
+    }
+    .plan-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 28px;
+      flex: 1;
+    }
+    .plan-feature-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 0.92rem;
+      color: var(--text-muted);
+    }
+    .plan-feature-item .check-icon {
+      width: 16px;
+      height: 16px;
+      color: var(--secondary);
+      flex-shrink: 0;
+    }
+    .plan-select-btn {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-primary);
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.25s ease;
+    }
+    .plan-select-btn .btn-check-icon {
+      display: none;
+      width: 16px;
+      height: 16px;
+    }
+    .plan-select-btn.active {
+      background: var(--accent-gold);
+      border-color: var(--accent-gold);
+      color: #1a1a2e;
+      font-weight: 700;
+    }
+    .plan-select-btn.active .btn-check-icon {
+      display: inline-block;
+    }
+
+    .step-actions-center {
+      display: flex;
+      justify-content: center;
+      gap: 16px;
+    }
+
+    /* ─── Step 2: Customer Form ─── */
+    .form-container-card {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 40px;
+    }
+    .form-group {
+      margin-bottom: 24px;
+    }
+    .form-label {
+      display: block;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      color: var(--text-primary);
+    }
+    .form-label .required-star {
+      color: var(--accent-gold);
+      margin-left: 2px;
+    }
+    .form-input {
+      width: 100%;
+      background: rgba(13, 11, 26, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius-sm);
+      padding: 14px 18px;
+      font-size: 1rem;
+      font-family: 'Inter', sans-serif;
+      color: var(--text-primary);
+      transition: all 0.25s ease;
+      outline: none;
+    }
+    .form-input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 16px rgba(139, 92, 246, 0.25);
+      background: rgba(18, 14, 36, 0.9);
+    }
+    .form-input.input-invalid {
+      border-color: var(--danger);
+      box-shadow: 0 0 12px rgba(239, 68, 68, 0.25);
+    }
+    .form-helper {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      margin-top: 6px;
+    }
+    .form-error {
+      font-size: 0.85rem;
+      color: var(--danger);
+      margin-top: 6px;
+    }
+    .form-error.hidden {
+      display: none;
+    }
+
+    /* Device Radio Cards */
+    .device-selection-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .device-radio-card {
+      padding: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius-sm);
+      background: rgba(13, 11, 26, 0.6);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      transition: all 0.25s ease;
+    }
+    .device-radio-card:hover {
+      border-color: rgba(139, 92, 246, 0.5);
+      background: rgba(139, 92, 246, 0.08);
+    }
+    .device-radio-card.selected {
+      border-color: var(--accent-gold);
+      background: rgba(232, 201, 135, 0.06);
+      box-shadow: 0 0 16px rgba(232, 201, 135, 0.18);
+    }
+    .device-radio-card input[type="radio"] {
+      display: none;
+    }
+    .device-icon-box {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-primary);
+      flex-shrink: 0;
+    }
+    .device-icon-box svg {
+      width: 22px;
+      height: 22px;
+    }
+    .device-card-content h4 {
+      font-size: 1.15rem;
+      margin-bottom: 2px;
+    }
+    .device-card-content p {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .form-nav-buttons {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      margin-top: 36px;
+      padding-top: 24px;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    /* ─── Step 3: Payment Layout (Two-Column) ─── */
+    .payment-layout {
+      display: grid;
+      grid-template-columns: 1fr 380px;
+      gap: 32px;
+      align-items: start;
+    }
+    .payment-main-col {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+    .payment-methods-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    .payment-method-card {
+      padding: 18px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-md);
+      transition: all 0.25s ease;
+    }
+    .payment-method-card:hover {
+      border-color: rgba(139, 92, 246, 0.4);
+    }
+    .payment-method-card.selected {
+      border-color: var(--accent-gold);
+      background: rgba(232, 201, 135, 0.06);
+      box-shadow: 0 0 20px rgba(232, 201, 135, 0.15);
+    }
+    .method-card-radio {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 12px;
+    }
+    .payment-method-card.selected .method-card-radio {
+      border-color: var(--accent-gold);
+    }
+    .radio-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--accent-gold);
+      display: none;
+    }
+    .payment-method-card.selected .radio-dot {
+      display: block;
+    }
+    .method-card-info {
+      flex: 1;
+    }
+    .method-name {
+      display: block;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      text-transform: uppercase;
+    }
+    .method-sub {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .method-badge-brand {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.75rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 4px 8px;
+      border-radius: 6px;
+    }
+    .method-badge-brand.easypaisa {
+      background: rgba(76, 175, 80, 0.15);
+      color: #4CAF50;
+    }
+    .method-badge-brand.jazzcash {
+      background: rgba(228, 0, 43, 0.15);
+      color: #ff4d6d;
+    }
+
+    /* Account Details Box */
+    .payment-details-card {
+      padding: 28px;
+    }
+    .payment-details-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .payment-method-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: var(--secondary);
+    }
+    .payable-amount-pill {
+      background: rgba(232, 201, 135, 0.12);
+      border: 1px solid rgba(232, 201, 135, 0.3);
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      color: var(--accent-gold);
+    }
+    .account-info-box {
+      background: rgba(13, 11, 26, 0.8);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-sm);
+      padding: 18px;
+      margin-bottom: 24px;
+    }
+    .account-info-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 0;
+    }
+    .account-info-row:not(:last-child) {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .info-label {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+    .info-value {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .info-value.highlight {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--accent-gold);
+      letter-spacing: 0.05em;
+    }
+    .account-number-copy-wrap {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .btn-copy-sm {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: var(--text-primary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+    .btn-copy-sm svg {
+      width: 14px;
+      height: 14px;
+    }
+    .btn-copy-sm:hover {
+      background: var(--accent-gold);
+      color: #1a1a2e;
+      border-color: var(--accent-gold);
+    }
+    .btn-copy-sm.copied {
+      background: var(--success);
+      color: #1a1a2e;
+      border-color: var(--success);
+    }
+
+    .instructions-section {
+      margin-top: 10px;
+    }
+    .instructions-title {
+      font-size: 1.05rem;
+      margin-bottom: 12px;
+      color: var(--text-primary);
+    }
+    .instructions-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .instruction-step {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+    .instruction-step .step-num {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: rgba(139, 92, 246, 0.2);
+      color: var(--secondary);
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    /* TID & Screenshot Section */
+    .tid-card {
+      padding: 28px;
+    }
+    .screenshot-dropzone {
+      border: 2px dashed rgba(255, 255, 255, 0.15);
+      border-radius: var(--radius-sm);
+      padding: 28px 20px;
+      text-align: center;
+      background: rgba(13, 11, 26, 0.4);
+      cursor: pointer;
+      transition: all 0.25s ease;
+      margin-top: 8px;
+    }
+    .screenshot-dropzone:hover, .screenshot-dropzone.drag-over {
+      border-color: var(--secondary);
+      background: rgba(125, 211, 252, 0.05);
+    }
+    .upload-prompt-wrap svg {
+      width: 36px;
+      height: 36px;
+      color: var(--secondary);
+      margin: 0 auto 10px;
+    }
+    .upload-prompt-wrap p {
+      font-size: 0.92rem;
+      color: var(--text-primary);
+      margin-bottom: 4px;
+    }
+    .upload-prompt-wrap .browse-text {
+      color: var(--accent-gold);
+      font-weight: 600;
+    }
+    .upload-prompt-wrap .upload-limit-note {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    /* Screenshot Preview Card */
+    .screenshot-preview-card {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      padding: 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+    }
+    .preview-thumb-wrap {
+      width: 56px;
+      height: 56px;
+      border-radius: 8px;
+      overflow: hidden;
+      flex-shrink: 0;
+      background: #000;
+    }
+    .preview-thumb {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+    .preview-meta {
+      flex: 1;
+      overflow: hidden;
+    }
+    .preview-filename {
+      display: block;
+      font-size: 0.9rem;
+      font-weight: 600;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .preview-filesize {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+    .btn-remove-preview {
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.3);
+      color: var(--danger);
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+    .btn-remove-preview:hover {
+      background: var(--danger);
+      color: #fff;
+    }
+    .btn-remove-preview svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    /* ─── Order Summary Sidebar ─── */
+    .payment-sidebar-col {
+      position: sticky;
+      top: 100px;
+    }
+    .summary-inner-card {
+      padding: 28px;
+    }
+    .summary-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .summary-title {
+      font-size: 1.35rem;
+    }
+    .summary-secure-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 0.8rem;
+      color: var(--success);
+      font-weight: 600;
+    }
+    .summary-secure-badge svg {
+      width: 14px;
+      height: 14px;
+    }
+    .summary-plan-highlight {
+      background: rgba(139, 92, 246, 0.1);
+      border: 1px solid rgba(139, 92, 246, 0.2);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      margin-bottom: 20px;
+    }
+    .summary-plan-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    .summary-plan-name {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+    .summary-plan-duration {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+    .summary-plan-price-num {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--accent-gold);
+    }
+    .summary-savings-pill {
+      margin-top: 8px;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--success);
+    }
+    .summary-details-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem;
+    }
+    .summary-row .row-label {
+      color: var(--text-muted);
+    }
+    .summary-row .row-val {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+    .summary-row .row-val.active-device {
+      text-transform: uppercase;
+      color: var(--secondary);
+      font-weight: 600;
+    }
+    .summary-row .row-val.free-highlight {
+      color: var(--success);
+    }
+    .summary-divider {
+      height: 1px;
+      background: rgba(255, 255, 255, 0.08);
+      margin-bottom: 18px;
+    }
+    .summary-total-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 20px;
+    }
+    .total-label {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .total-amount {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--accent-gold);
+    }
+    .summary-guarantee-note {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+    .summary-guarantee-note svg {
+      width: 16px;
+      height: 16px;
+      color: var(--success);
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+
+    /* ─── Step 4: Confirmation ─── */
+    .confirmation-card {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 48px;
+      text-align: center;
+    }
+    .success-animation-wrap {
+      margin-bottom: 32px;
+    }
+    .checkmark-circle {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 24px;
+      border-radius: 50%;
+      background: rgba(52, 211, 153, 0.15);
+      border: 2px solid var(--success);
+      box-shadow: 0 0 32px rgba(52, 211, 153, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .checkmark-icon {
+      width: 52px;
+      height: 52px;
+      display: block;
+      stroke-width: 3.5;
+      stroke: var(--success);
+      stroke-miterlimit: 10;
+    }
+    .checkmark-circle-stroke {
+      stroke-dasharray: 166;
+      stroke-dashoffset: 166;
+      stroke-width: 2;
+      stroke-miterlimit: 10;
+      stroke: var(--success);
+      fill: none;
+      animation: stroke 0.6s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+    }
+    .checkmark-check-stroke {
+      transform-origin: 50% 50%;
+      stroke-dasharray: 48;
+      stroke-dashoffset: 48;
+      animation: stroke 0.4s cubic-bezier(0.65, 0, 0.45, 1) 0.6s forwards;
+    }
+    @keyframes stroke {
+      100% {
+        stroke-dashoffset: 0;
+      }
+    }
+    .confirmation-title {
+      font-size: 2.2rem;
+      margin-bottom: 12px;
+    }
+    .confirmation-subtitle {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+      line-height: 1.6;
+      max-width: 580px;
+      margin: 0 auto;
+    }
+    .user-highlight {
+      color: var(--accent-gold);
+    }
+
+    /* Order ID Badge */
+    .order-id-badge-wrap {
+      background: rgba(13, 11, 26, 0.85);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: var(--radius-sm);
+      padding: 16px 24px;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+      margin: 28px 0;
+    }
+    .order-id-label {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--text-muted);
+    }
+    .order-id-pill {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .order-id-text {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--accent-gold);
+    }
+    .btn-copy-id {
+      background: rgba(255, 255, 255, 0.08);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: var(--text-primary);
+      padding: 6px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      transition: all 0.2s ease;
+    }
+    .btn-copy-id svg {
+      width: 16px;
+      height: 16px;
+    }
+    .btn-copy-id:hover {
+      background: var(--accent-gold);
+      color: #1a1a2e;
+    }
+
+    /* Status Timeline */
+    .status-timeline-wrap {
+      margin: 28px 0;
+      text-align: left;
+    }
+    .timeline-title {
+      font-size: 1.15rem;
+      margin-bottom: 16px;
+      text-align: center;
+    }
+    .timeline-steps {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      max-width: 540px;
+      margin: 0 auto;
+    }
+    .timeline-step {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 8px;
+      flex: 1;
+    }
+    .timeline-step .step-icon-wrap {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.08);
+      border: 2px solid rgba(255, 255, 255, 0.15);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      color: var(--text-muted);
+      position: relative;
+    }
+    .timeline-step.completed .step-icon-wrap {
+      background: rgba(52, 211, 153, 0.2);
+      border-color: var(--success);
+      color: var(--success);
+    }
+    .timeline-step.completed .step-icon-wrap svg {
+      width: 20px;
+      height: 20px;
+    }
+    .timeline-step.current-verifying .step-icon-wrap {
+      border-color: var(--accent-gold);
+      background: rgba(232, 201, 135, 0.15);
+    }
+    .pulse-dot {
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--accent-gold);
+      box-shadow: 0 0 14px var(--accent-gold);
+      animation: pulse-ring 1.8s infinite;
+    }
+    @keyframes pulse-ring {
+      0% {
+        transform: scale(0.9);
+        box-shadow: 0 0 0 0 rgba(232, 201, 135, 0.7);
+      }
+      70% {
+        transform: scale(1.1);
+        box-shadow: 0 0 0 10px rgba(232, 201, 135, 0);
+      }
+      100% {
+        transform: scale(0.9);
+        box-shadow: 0 0 0 0 rgba(232, 201, 135, 0);
+      }
+    }
+    .timeline-step .step-meta {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .timeline-step .step-name {
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      color: var(--text-primary);
+    }
+    .timeline-step .step-desc {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+    }
+    .timeline-line {
+      height: 2px;
+      background: rgba(255, 255, 255, 0.12);
+      flex: 1;
+      margin: -24px 8px 0;
+    }
+    .timeline-line.active-line {
+      background: var(--success);
+    }
+
+    /* Confirmation Summary Table */
+    .confirmation-summary-table {
+      background: rgba(13, 11, 26, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-sm);
+      padding: 20px;
+      margin: 28px 0;
+      text-align: left;
+    }
+    .summary-table-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      font-size: 0.95rem;
+    }
+    .summary-table-row:not(:last-child) {
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .summary-table-row .label {
+      color: var(--text-muted);
+    }
+    .summary-table-row .val {
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .summary-table-row .val.font-gold {
+      color: var(--accent-gold);
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.15rem;
+    }
+    .summary-table-row .val.code-font {
+      font-family: monospace;
+      letter-spacing: 0.05em;
+      color: var(--secondary);
+    }
+    .capitalize {
+      text-transform: capitalize;
+    }
+
+    /* Confirmation Actions */
+    .confirmation-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      max-width: 420px;
+      margin: 0 auto;
+    }
+    .btn-whatsapp-action {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: #25D366;
+      color: #07070D;
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      padding: 14px 24px;
+      border-radius: 12px;
+      transition: all 0.25s ease;
+      box-shadow: 0 4px 20px rgba(37, 211, 102, 0.3);
+    }
+    .btn-whatsapp-action svg {
+      width: 22px;
+      height: 22px;
+    }
+    .btn-whatsapp-action:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(37, 211, 102, 0.45);
+      filter: brightness(1.05);
+    }
+    .secondary-actions-row {
+      display: flex;
+      gap: 12px;
+    }
+    .secondary-actions-row a {
+      flex: 1;
+    }
+
+    /* ─── Mobile Bottom Sticky Bar ─── */
+    .mobile-checkout-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 990;
+      background: rgba(13, 11, 26, 0.95);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-top: 1px solid rgba(255, 255, 255, 0.12);
+      padding: 14px 20px;
+      display: none;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.4);
+    }
+    .mobile-bar-summary {
+      display: flex;
+      flex-direction: column;
+    }
+    .mobile-bar-plan {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    .mobile-bar-price {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.4rem;
+      font-weight: 700;
+      color: var(--accent-gold);
+      line-height: 1.1;
+    }
+    .mobile-bar-btn {
+      padding: 12px 24px;
+      font-size: 0.95rem;
+    }
+
+    /* ─── WhatsApp Floating Button ─── */
+    .whatsapp-float {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      z-index: 995;
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: #25D366;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 24px rgba(37, 211, 102, 0.4);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .whatsapp-float svg {
+      width: 32px;
+      height: 32px;
+      fill: #fff;
+    }
+    .whatsapp-float:hover {
+      transform: scale(1.1);
+      box-shadow: 0 12px 30px rgba(37, 211, 102, 0.6);
+    }
+
+    /* ─── Toast Container ─── */
+    .toast-container {
+      position: fixed;
+      top: 24px;
+      right: 24px;
+      z-index: 10000;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-width: 380px;
+      pointer-events: none;
+    }
+    .toast {
+      background: rgba(18, 14, 36, 0.95);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 12px;
+      padding: 14px 18px;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      pointer-events: auto;
+      animation: toast-in 0.35s ease forwards;
+    }
+    .toast.toast-exit {
+      animation: toast-out 0.35s ease forwards;
+    }
+    .toast-success {
+      border-left: 4px solid var(--success);
+    }
+    .toast-error {
+      border-left: 4px solid var(--danger);
+    }
+    .toast-info {
+      border-left: 4px solid var(--secondary);
+    }
+    .toast-icon svg {
+      width: 22px;
+      height: 22px;
+    }
+    .toast-success .toast-icon svg {
+      color: var(--success);
+    }
+    .toast-error .toast-icon svg {
+      color: var(--danger);
+    }
+    .toast-info .toast-icon svg {
+      color: var(--secondary);
+    }
+    .toast-msg {
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+    @keyframes toast-in {
+      from {
+        opacity: 0;
+        transform: translateX(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+    @keyframes toast-out {
+      from {
+        opacity: 1;
+        transform: translateX(0);
+      }
+      to {
+        opacity: 0;
+        transform: translateX(40px);
+      }
+    }
+
+    /* ─── Shared Footer ─── */
+    .footer {
+      background: var(--bg-deep);
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 70px 0 30px;
+      margin-top: auto;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1.5fr;
+      gap: 40px;
+      margin-bottom: 50px;
+    }
+    .footer-brand h3 {
+      font-size: 1.5rem;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .footer-brand p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      max-width: 320px;
+      margin-bottom: 20px;
+    }
+    .footer-col-title {
+      font-size: 1.1rem;
+      margin-bottom: 18px;
+    }
+    .footer-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .footer-links a {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+    .footer-links a:hover {
+      color: var(--text-primary);
+    }
+    .support-hours-box {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+    }
+    .payment-badges-row {
+      display: flex;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .payment-badge-pill {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 0.8rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 4px 10px;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      padding-top: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+    .footer-legal-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    /* ─── Responsive Media Queries ─── */
+    @media (max-width: 992px) {
+      .payment-layout {
+        grid-template-columns: 1fr;
+      }
+      .payment-sidebar-col {
+        position: static;
+        order: -1;
+      }
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav-menu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: rgba(13, 11, 26, 0.98);
+        backdrop-filter: blur(24px);
+        flex-direction: column;
+        padding: 24px;
+        gap: 18px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .nav-menu.active {
+        display: flex;
+      }
+      .nav-toggle {
+        display: flex;
+      }
+      .nav-cta {
+        margin-left: 0;
+        width: 100%;
+        text-align: center;
+      }
+
+      .checkout-progress {
+        padding: 12px 16px;
+        margin-bottom: 36px;
+      }
+      .step-label {
+        display: none;
+      }
+      .step-number {
+        width: 32px;
+        height: 32px;
+        font-size: 0.9rem;
+      }
+      .progress-line {
+        margin: 0 8px;
+        min-width: 16px;
+      }
+
+      .form-container-card {
+        padding: 24px 20px;
+      }
+      .device-selection-grid {
+        grid-template-columns: 1fr;
+      }
+      .payment-methods-grid {
+        grid-template-columns: 1fr;
+      }
+      .payment-details-card, .tid-card, .summary-inner-card, .confirmation-card {
+        padding: 22px 18px;
+      }
+
+      .mobile-checkout-bar {
+        display: flex;
+      }
+      .checkout-main {
+        padding-bottom: 120px;
+      }
+
+      .whatsapp-float {
+        bottom: 84px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+      }
+      .whatsapp-float svg {
+        width: 26px;
+        height: 26px;
+      }
+
+      .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 30px;
+      }
+      .footer-bottom {
+        flex-direction: column;
+        gap: 12px;
+        text-align: center;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==================== SHARED NAVBAR ==================== -->
+  <nav class="navbar" id="navbar">
+    <div class="container navbar-inner">
+      <a href="index.html" class="nav-logo" id="nav-logo">YourBrand</a>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav-menu" id="nav-menu">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="index.html#dns-servers" class="nav-link">DNS Servers</a>
+        <a href="ios-guide.html" class="nav-link">iOS</a>
+        <a href="android-guide.html" class="nav-link">Android</a>
+        <a href="index.html#pricing" class="nav-link">Pricing</a>
+        <a href="index.html#faq" class="nav-link">FAQ</a>
+        <a href="contact.html" class="nav-link">Support</a>
+        <a href="checkout.html" class="btn-gold nav-cta">Get Premium</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ==================== MAIN CHECKOUT ==================== -->
+  <main class="checkout-main">
+    <div class="container">
+
+      <!-- Page Header -->
+      <header class="checkout-header">
+        <span class="badge-pill">⚡ Instant Setup & Activation</span>
+        <h1 class="checkout-title">Get Gaming DNS Premium</h1>
+        <p class="checkout-subtitle">Complete your purchase in 4 simple steps and enjoy ultra-low ping across all regions.</p>
+      </header>
+
+      <!-- Multi-Step Progress Steps Bar -->
+      <div class="checkout-progress" id="checkout-progress">
+        <div class="progress-step active" data-step="1">
+          <span class="step-number">1</span>
+          <span class="step-label">Plan</span>
+        </div>
+        <div class="progress-line"></div>
+        <div class="progress-step" data-step="2">
+          <span class="step-number">2</span>
+          <span class="step-label">Details</span>
+        </div>
+        <div class="progress-line"></div>
+        <div class="progress-step" data-step="3">
+          <span class="step-number">3</span>
+          <span class="step-label">Payment</span>
+        </div>
+        <div class="progress-line"></div>
+        <div class="progress-step" data-step="4">
+          <span class="step-number">4</span>
+          <span class="step-label">Confirmation</span>
+        </div>
+      </div>
+
+      <!-- ==================== STEP 1: SELECT PLAN ==================== -->
+      <section class="checkout-step active" id="checkout-step-1">
+        <div class="step-section-header">
+          <h2>Select Your DNS Plan</h2>
+          <p>Choose the duration that fits your gaming needs. All plans include full server network access.</p>
+        </div>
+
+        <!-- Populated dynamically by js/checkout.js from SITE_CONFIG -->
+        <div class="plans-grid" id="plans-grid"></div>
+
+        <div class="form-error hidden" id="plan-error" style="text-align: center; margin-bottom: 24px;"></div>
+
+        <div class="step-actions-center">
+          <button type="button" class="btn-gold" id="btn-step-1-next">
+            Continue to Details &rarr;
+          </button>
+        </div>
+      </section>
+
+      <!-- ==================== STEP 2: CUSTOMER DETAILS ==================== -->
+      <section class="checkout-step" id="checkout-step-2">
+        <div class="step-section-header">
+          <h2>Your Contact & Device Details</h2>
+          <p>We need your contact information to deliver your personal DNS profile and activation credentials.</p>
+        </div>
+
+        <div class="glass-card form-container-card">
+          <form id="customer-form" novalidate onsubmit="return false;">
+
+            <!-- Full Name -->
+            <div class="form-group">
+              <label for="cust-name" class="form-label">
+                Full Name <span class="required-star">*</span>
+              </label>
+              <input type="text" id="cust-name" class="form-input" placeholder="e.g. Zain Ahmed" required autocomplete="name">
+              <div class="form-error hidden" id="error-name"></div>
+            </div>
+
+            <!-- Email -->
+            <div class="form-group">
+              <label for="cust-email" class="form-label">
+                Email Address <span class="required-star">*</span>
+              </label>
+              <input type="email" id="cust-email" class="form-input" placeholder="e.g. name@example.com" required autocomplete="email">
+              <div class="form-helper">We will send your setup guide and receipt to this email.</div>
+              <div class="form-error hidden" id="error-email"></div>
+            </div>
+
+            <!-- WhatsApp / Phone -->
+            <div class="form-group">
+              <label for="cust-phone" class="form-label">
+                WhatsApp / Phone Number <span class="required-star">*</span>
+              </label>
+              <input type="tel" id="cust-phone" class="form-input" placeholder="0300-1234567" maxlength="12" required autocomplete="tel">
+              <div class="form-helper">Pakistani format (03XX-XXXXXXX). Credentials will be delivered via WhatsApp.</div>
+              <div class="form-error hidden" id="error-phone"></div>
+            </div>
+
+            <!-- Device Selection -->
+            <div class="form-group">
+              <label class="form-label">
+                Target Device <span class="required-star">*</span>
+              </label>
+              <div class="device-selection-grid">
+                <!-- iOS Card -->
+                <div class="device-radio-card" data-device="ios">
+                  <input type="radio" id="device-ios" name="device" value="ios">
+                  <div class="device-icon-box">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M15.97 3.5c.62-.75 1.04-1.8 0.92-2.85-.9.04-1.99.6-2.64 1.35-.57.65-1.06 1.71-.93 2.73 1.01.08 2.03-.49 2.65-1.23z"/>
+                    </svg>
+                  </div>
+                  <div class="device-card-content">
+                    <h4>Apple iOS</h4>
+                    <p>iPhone, iPad & iOS Profile</p>
+                  </div>
+                </div>
+
+                <!-- Android Card -->
+                <div class="device-radio-card" data-device="android">
+                  <input type="radio" id="device-android" name="device" value="android">
+                  <div class="device-icon-box">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                      <path d="M17.523 15.3414c-.5511 0-.9993-.4486-.9993-1.0003s.4482-1.0002.9993-1.0002c.5516 0 .9997.4485.9997 1.0002 0 .5517-.4481 1.0003-.9997 1.0003m-11.046 0c-.5511 0-.9993-.4486-.9993-1.0003s.4482-1.0002.9993-1.0002c.5516 0 .9997.4485.9997 1.0002 0 .5517-.4481 1.0003-.9997 1.0003m11.4045-6.02l1.9973-3.4592a.416.416 0 00-.1523-.5676.416.416 0 00-.5676.1524l-2.0223 3.503C15.5902 8.411 13.854 8.12 12 8.12s-3.5902.291-5.1366.83l-2.0223-3.503a.4158.4158 0 00-.5676-.1524.416.416 0 00-.1523.5676l1.9973 3.4592C2.6889 11.1867.3432 14.6589 0 18.761h24c-.3432-4.1021-2.6889-7.5743-6.1185-9.4396"/>
+                    </svg>
+                  </div>
+                  <div class="device-card-content">
+                    <h4>Android</h4>
+                    <p>Private DNS & Wi-Fi Setup</p>
+                  </div>
+                </div>
+              </div>
+              <div class="form-error hidden" id="error-device"></div>
+            </div>
+
+            <!-- Navigation Buttons -->
+            <div class="form-nav-buttons">
+              <button type="button" class="btn-secondary" id="btn-step-2-back">
+                &larr; Back to Plans
+              </button>
+              <button type="button" class="btn-gold" id="btn-step-2-next">
+                Continue to Payment &rarr;
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- ==================== STEP 3: PAYMENT & SUMMARY ==================== -->
+      <section class="checkout-step" id="checkout-step-3">
+        <div class="step-section-header">
+          <h2>Payment & Verification</h2>
+          <p>Transfer the plan amount to our official wallet and submit your Transaction ID (TID).</p>
+        </div>
+
+        <div class="payment-layout">
+          <!-- Left Column: Payment Details & Inputs -->
+          <div class="payment-main-col">
+            <!-- Payment Method Selector -->
+            <div>
+              <label class="form-label">Select Payment Method</label>
+              <div class="payment-methods-grid" id="payment-methods-selector"></div>
+            </div>
+
+            <!-- Dynamic Account Details & Instructions -->
+            <div id="payment-account-details"></div>
+
+            <!-- TID Input & Screenshot Form Card -->
+            <div class="glass-card tid-card">
+              <h3 style="font-size: 1.25rem; margin-bottom: 16px;">Verify Your Transaction</h3>
+
+              <!-- Transaction ID -->
+              <div class="form-group">
+                <label for="payment-tid" class="form-label">
+                  Transaction ID (TID) <span class="required-star">*</span>
+                </label>
+                <input type="text" id="payment-tid" class="form-input" placeholder="e.g. 10928374651" required autocomplete="off">
+                <div class="form-helper">Found in your Easypaisa / JazzCash confirmation SMS or transaction receipt.</div>
+                <div class="form-error hidden" id="error-tid"></div>
+              </div>
+
+              <!-- Screenshot Upload (Optional) -->
+              <div class="form-group" style="margin-bottom: 0;">
+                <label class="form-label">Payment Screenshot <span style="color: var(--text-muted); font-size: 0.8rem; text-transform: none;">(Optional, speeds up verification)</span></label>
+                <div class="screenshot-dropzone" id="screenshot-dropzone">
+                  <input type="file" id="payment-screenshot" accept="image/*" style="display: none;">
+                  
+                  <div class="upload-prompt-wrap" id="upload-prompt-wrap">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                      <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                      <polyline points="17 8 12 3 7 8"/>
+                      <line x1="12" y1="3" x2="12" y2="15"/>
+                    </svg>
+                    <p>Drag & drop payment screenshot here, or <span class="browse-text">Browse File</span></p>
+                    <span class="upload-limit-note">Supports PNG, JPG, WEBP (Max 5MB)</span>
+                  </div>
+
+                  <div id="screenshot-preview-wrap" class="hidden"></div>
+                </div>
+                <div class="form-error hidden" id="error-screenshot"></div>
+              </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div style="display: flex; justify-content: space-between; align-items: center; gap: 16px;">
+              <button type="button" class="btn-secondary" id="btn-step-3-back">
+                &larr; Back
+              </button>
+              <button type="button" class="btn-gold" id="btn-submit-payment">
+                <span class="btn-text">Submit Payment</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Right Column: Sticky Order Summary -->
+          <div class="payment-sidebar-col">
+            <aside id="order-summary-sidebar"></aside>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== STEP 4: CONFIRMATION ==================== -->
+      <section class="checkout-step" id="checkout-step-4">
+        <!-- Rendered dynamically by js/checkout.js -->
+        <div id="confirmation-details"></div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- ==================== MOBILE BOTTOM BAR ==================== -->
+  <div class="mobile-checkout-bar" id="mobile-checkout-bar">
+    <div class="mobile-bar-summary">
+      <span class="mobile-bar-plan" id="mobile-bar-plan">Selected Plan</span>
+      <span class="mobile-bar-price" id="mobile-bar-price">Rs. 0</span>
+    </div>
+    <button type="button" class="btn-gold mobile-bar-btn" id="mobile-bar-btn">
+      Continue &rarr;
+    </button>
+  </div>
+
+  <!-- ==================== WHATSAPP FLOAT ==================== -->
+  <a href="https://wa.me/923001234567" target="_blank" rel="noopener noreferrer" class="whatsapp-float" aria-label="Chat on WhatsApp">
+    <svg viewBox="0 0 24 24">
+      <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/>
+    </svg>
+  </a>
+
+  <!-- ==================== TOAST CONTAINER ==================== -->
+  <div class="toast-container" id="toast-container" aria-live="polite"></div>
+
+  <!-- ==================== SHARED FOOTER ==================== -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <!-- Brand Info -->
+        <div class="footer-brand">
+          <h3>YourBrand</h3>
+          <p>Premium gaming-optimized DNS service built for mobile gamers. Faster lookups, optimized routing, and ping stabilization.</p>
+          <div class="support-hours-box">
+            <strong>Support Hours:</strong> Mon – Sun, 10 AM – 12 AM (PKT)
+          </div>
+          <div class="payment-badges-row">
+            <span class="payment-badge-pill">Easypaisa</span>
+            <span class="payment-badge-pill">JazzCash</span>
+          </div>
+        </div>
+
+        <!-- Setup Guides -->
+        <div>
+          <h4 class="footer-col-title">Setup Guides</h4>
+          <ul class="footer-links">
+            <li><a href="ios-guide.html">iOS Configuration</a></li>
+            <li><a href="android-guide.html">Android Private DNS</a></li>
+            <li><a href="index.html#dns-servers">DNS Server List</a></li>
+            <li><a href="order-tracking.html">Track Order Status</a></li>
+          </ul>
+        </div>
+
+        <!-- Quick Links -->
+        <div>
+          <h4 class="footer-col-title">Navigation</h4>
+          <ul class="footer-links">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="index.html#pricing">Pricing Plans</a></li>
+            <li><a href="checkout.html">Checkout</a></li>
+            <li><a href="index.html#faq">Frequently Asked Questions</a></li>
+            <li><a href="contact.html">Customer Support</a></li>
+          </ul>
+        </div>
+
+        <!-- Direct Support -->
+        <div>
+          <h4 class="footer-col-title">Need Assistance?</h4>
+          <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 16px;">
+            Have questions about activation, your transaction ID, or game compatibility? Message us directly on WhatsApp.
+          </p>
+          <a href="https://wa.me/923001234567" target="_blank" rel="noopener noreferrer" class="btn-secondary" style="font-size: 0.9rem; padding: 10px 18px;">
+            Chat on WhatsApp
+          </a>
+        </div>
+      </div>
+
+      <div class="footer-bottom">
+        <div>
+          &copy; 2026 YourBrand. All rights reserved.
+        </div>
+        <div class="footer-legal-links">
+          <a href="terms.html">Terms of Service</a>
+          <a href="privacy.html">Privacy Policy</a>
+          <a href="refund.html">Refund Policy</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ==================== SCRIPTS ==================== -->
+  <script src="js/config.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/animations.js"></script>
+  <script src="js/payment.js"></script>
+  <script src="js/checkout.js"></script>
+</body>
+</html>

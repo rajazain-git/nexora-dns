@@ -1,0 +1,1956 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>iOS Setup Guide — YourBrand</title>
+  <meta name="description" content="Step-by-step setup guide to configure premium gaming DNS on iPhone and iPad. Wi-Fi manual configuration and mobile data DNS profile methods for ultra-low latency.">
+  <meta name="theme-color" content="#07070D">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/animations.css">
+
+  <style>
+    /* ── Core Design Tokens & Resets ─────────────────────── */
+    :root {
+      --bg-base: #07070D;
+      --bg-mid: #0D0B1A;
+      --bg-deep: #120E24;
+      --primary: #8B5CF6;
+      --primary-glow: rgba(139, 92, 246, 0.25);
+      --secondary: #7DD3FC;
+      --secondary-glow: rgba(125, 211, 252, 0.2);
+      --accent-gold: #E8C987;
+      --accent-gold-hover: #F3D9A0;
+      --gold-dark: #D9B36A;
+      --success: #34D399;
+      --danger: #F87171;
+      --text-primary: #F5F5FA;
+      --text-muted: #8E92A8;
+      --glass-bg: rgba(255, 255, 255, 0.05);
+      --glass-border-top: rgba(255, 255, 255, 0.16);
+      --glass-border-bottom: rgba(255, 255, 255, 0.04);
+      --radius-lg: 24px;
+      --radius-md: 16px;
+      --radius-sm: 10px;
+      --transition-smooth: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-base);
+      background-image: 
+        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(139, 92, 246, 0.18), transparent 70%),
+        radial-gradient(circle at 10% 25%, rgba(125, 211, 252, 0.06), transparent 40%),
+        radial-gradient(circle at 90% 75%, rgba(232, 201, 135, 0.05), transparent 45%);
+      background-attachment: fixed;
+      color: var(--text-primary);
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      line-height: 1.7;
+      min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Rajdhani', sans-serif;
+      letter-spacing: 0.04em;
+      font-weight: 700;
+      line-height: 1.25;
+      color: var(--text-primary);
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+      transition: var(--transition-smooth);
+    }
+
+    /* Container */
+    .container {
+      width: 100%;
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ── Shared Navbar Styling ───────────────────────────── */
+    .navbar {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      backdrop-filter: blur(20px) saturate(160%);
+      -webkit-backdrop-filter: blur(20px) saturate(160%);
+      background: rgba(7, 7, 13, 0.85);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      transition: var(--transition-smooth);
+    }
+
+    .navbar-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 76px;
+    }
+
+    .nav-logo {
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      background: linear-gradient(135deg, #FFFFFF 20%, var(--secondary) 60%, var(--accent-gold) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav-menu {
+      display: flex;
+      align-items: center;
+      gap: 28px;
+    }
+
+    .nav-link {
+      font-size: 0.95rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      position: relative;
+      padding: 6px 0;
+      transition: var(--transition-smooth);
+    }
+
+    .nav-link:hover,
+    .nav-link.active {
+      color: var(--text-primary);
+    }
+
+    .nav-link.active::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      border-radius: 2px;
+    }
+
+    .nav-cta {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 22px !important;
+      font-size: 0.9rem !important;
+    }
+
+    .nav-toggle {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .nav-toggle span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--text-primary);
+      border-radius: 2px;
+      transition: var(--transition-smooth);
+    }
+
+    /* ── Buttons ─────────────────────────────────────────── */
+    .btn-gold {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: linear-gradient(135deg, #F3D9A0, #D9B36A);
+      color: #1a1a2e;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      letter-spacing: 0.04em;
+      border-radius: 12px;
+      padding: 14px 32px;
+      border: none;
+      cursor: pointer;
+      box-shadow: 0 4px 20px rgba(232, 201, 135, 0.25);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease;
+      text-decoration: none;
+    }
+
+    .btn-gold:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 30px rgba(232, 201, 135, 0.4);
+      background: linear-gradient(135deg, #FFF0C2, #E2BF7A);
+      color: #0F0E17;
+    }
+
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--primary);
+      color: var(--text-primary);
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 1.05rem;
+      letter-spacing: 0.04em;
+      border-radius: 12px;
+      padding: 14px 32px;
+      cursor: pointer;
+      transition: var(--transition-smooth);
+      text-decoration: none;
+    }
+
+    .btn-secondary:hover {
+      background: rgba(139, 92, 246, 0.15);
+      border-color: var(--secondary);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 20px var(--primary-glow);
+    }
+
+    /* ── Glass Card Pattern ──────────────────────────────── */
+    .glass-card {
+      position: relative;
+      background: rgba(255, 255, 255, 0.04);
+      backdrop-filter: blur(24px) saturate(140%);
+      -webkit-backdrop-filter: blur(24px) saturate(140%);
+      border-radius: var(--radius-lg);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+      transition: transform 0.4s ease-out, box-shadow 0.4s ease-out, border-color 0.4s ease-out;
+      overflow: hidden;
+    }
+
+    .glass-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.03) 100%);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+    }
+
+    .glass-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(139, 92, 246, 0.3);
+      box-shadow: 0 20px 48px rgba(0, 0, 0, 0.5), 0 0 24px var(--primary-glow);
+    }
+
+    /* ── Sections & Scroll Reveal ────────────────────────── */
+    .section {
+      padding: 90px 0;
+      position: relative;
+    }
+
+    .reveal {
+      opacity: 0;
+      transform: translateY(24px);
+      transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1), transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .reveal.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ── Guide Hero ──────────────────────────────────────── */
+    .guide-hero {
+      padding: 60px 0 50px;
+      text-align: center;
+    }
+
+    .hero-badge-wrap {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 18px;
+      border-radius: 50px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      margin-bottom: 24px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--secondary);
+    }
+
+    .hero-icon-circle {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, rgba(255,255,255,0.12), rgba(255,255,255,0.02));
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+      box-shadow: 0 0 35px rgba(255, 255, 255, 0.1);
+    }
+
+    .hero-title {
+      font-size: clamp(2.4rem, 5vw, 3.8rem);
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #FFFFFF 30%, var(--secondary) 75%, var(--accent-gold) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-subtitle {
+      max-width: 680px;
+      margin: 0 auto 30px;
+      color: var(--text-muted);
+      font-size: 1.15rem;
+    }
+
+    .hero-tags {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border-radius: 30px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      font-size: 0.9rem;
+      color: var(--text-primary);
+    }
+
+    /* ── Guide Method Tabs ───────────────────────────────── */
+    .guide-tabs-wrapper {
+      max-width: 700px;
+      margin: 0 auto 40px;
+    }
+
+    .guide-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      background: rgba(255, 255, 255, 0.03);
+      padding: 8px;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .guide-tab {
+      background: transparent;
+      border: 1px solid transparent;
+      color: var(--text-muted);
+      font-family: 'Rajdhani', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      padding: 14px 20px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: var(--transition-smooth);
+      position: relative;
+    }
+
+    .guide-tab:hover {
+      color: var(--text-primary);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    .guide-tab.active {
+      color: #07070D;
+      background: linear-gradient(135deg, #F3D9A0, #D9B36A);
+      border-color: rgba(232, 201, 135, 0.4);
+      box-shadow: 0 4px 20px rgba(232, 201, 135, 0.3);
+    }
+
+    .tab-badge {
+      font-size: 0.72rem;
+      font-family: 'Inter', sans-serif;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 20px;
+      background: rgba(139, 92, 246, 0.2);
+      border: 1px solid var(--primary);
+      color: var(--secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .guide-tab.active .tab-badge {
+      background: rgba(7, 7, 13, 0.8);
+      color: var(--accent-gold);
+      border-color: transparent;
+    }
+
+    /* ── Tab Panels ──────────────────────────────────────── */
+    .tab-panel {
+      display: none;
+      animation: fadeIn 0.45s ease-out forwards;
+    }
+
+    .tab-panel.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Step Cards Grid ─────────────────────────────────── */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 28px;
+      margin-bottom: 40px;
+    }
+
+    .step-card {
+      padding: 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .step-header {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+
+    .step-badge {
+      width: 44px;
+      height: 44px;
+      flex-shrink: 0;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #F3D9A0, #D9B36A);
+      color: #07070D;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 1.35rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 14px rgba(232, 201, 135, 0.35);
+    }
+
+    .step-title {
+      font-size: 1.4rem;
+      color: var(--text-primary);
+    }
+
+    .step-description {
+      color: var(--text-muted);
+      font-size: 1rem;
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+
+    /* Screenshot Placeholder */
+    .screenshot-placeholder {
+      margin-top: auto;
+      border: 1.5px dashed rgba(255, 255, 255, 0.16);
+      border-radius: var(--radius-md);
+      background: rgba(255, 255, 255, 0.02);
+      padding: 30px 20px;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      transition: var(--transition-smooth);
+    }
+
+    .screenshot-placeholder:hover {
+      border-color: var(--secondary);
+      background: rgba(125, 211, 252, 0.04);
+    }
+
+    .screenshot-icon {
+      width: 42px;
+      height: 42px;
+      color: var(--secondary);
+      opacity: 0.75;
+    }
+
+    .screenshot-label {
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      letter-spacing: 0.05em;
+      color: var(--text-primary);
+    }
+
+    .screenshot-meta {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    /* ── Interactive Inline DNS Box ──────────────────────── */
+    .inline-dns-box {
+      background: rgba(13, 11, 26, 0.7);
+      border: 1px solid rgba(139, 92, 246, 0.25);
+      border-radius: var(--radius-sm);
+      padding: 16px;
+      margin-top: 16px;
+    }
+
+    .dns-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 8px 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .dns-row:last-child {
+      border-bottom: none;
+    }
+
+    .dns-label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    .dns-value-wrap {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .dns-code {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--secondary);
+      background: rgba(125, 211, 252, 0.08);
+      padding: 4px 10px;
+      border-radius: 6px;
+    }
+
+    .btn-copy {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      color: var(--text-primary);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: var(--transition-smooth);
+    }
+
+    .btn-copy:hover {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: #fff;
+    }
+
+    /* ── Profile Download CTA Card ───────────────────────── */
+    .profile-hero-card {
+      padding: 40px;
+      text-align: center;
+      margin-bottom: 32px;
+      background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(125, 211, 252, 0.05));
+      border: 1px solid rgba(139, 92, 246, 0.3);
+    }
+
+    .profile-hero-icon {
+      width: 64px;
+      height: 64px;
+      margin: 0 auto 16px;
+      color: var(--accent-gold);
+    }
+
+    .profile-hero-card h3 {
+      font-size: 1.8rem;
+      margin-bottom: 12px;
+    }
+
+    .profile-hero-card p {
+      max-width: 640px;
+      margin: 0 auto 24px;
+      color: var(--text-muted);
+    }
+
+    .download-note {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 14px;
+    }
+
+    /* ── Info Notice Card ────────────────────────────────── */
+    .info-card {
+      display: flex;
+      align-items: flex-start;
+      gap: 18px;
+      padding: 24px 28px;
+      margin-bottom: 40px;
+      background: rgba(125, 211, 252, 0.05);
+      border: 1px solid rgba(125, 211, 252, 0.2);
+      border-radius: var(--radius-md);
+    }
+
+    .info-icon {
+      font-size: 1.6rem;
+      line-height: 1;
+      color: var(--secondary);
+    }
+
+    .info-content h4 {
+      font-size: 1.25rem;
+      margin-bottom: 6px;
+      color: var(--text-primary);
+    }
+
+    .info-content p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    /* ── DNS Reference Section ───────────────────────────── */
+    .dns-reference-card {
+      padding: 36px;
+      margin-bottom: 50px;
+    }
+
+    .reference-header {
+      margin-bottom: 24px;
+    }
+
+    .reference-header h3 {
+      font-size: 1.7rem;
+      margin-bottom: 8px;
+    }
+
+    .server-table-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .server-card {
+      background: rgba(13, 11, 26, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-md);
+      padding: 20px;
+      transition: var(--transition-smooth);
+    }
+
+    .server-card:hover {
+      border-color: rgba(139, 92, 246, 0.4);
+      transform: translateY(-2px);
+    }
+
+    .server-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    .server-region-title {
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--success);
+      padding: 3px 8px;
+      border-radius: 12px;
+      background: rgba(52, 211, 153, 0.1);
+    }
+
+    .status-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--success);
+      box-shadow: 0 0 8px var(--success);
+    }
+
+    /* ── Troubleshooting Accordion ───────────────────────── */
+    .troubleshoot-wrap {
+      max-width: 900px;
+      margin: 0 auto 50px;
+    }
+
+    .section-heading-center {
+      text-align: center;
+      margin-bottom: 36px;
+    }
+
+    .section-heading-center h2 {
+      font-size: 2.2rem;
+      margin-bottom: 10px;
+    }
+
+    .section-heading-center p {
+      color: var(--text-muted);
+      font-size: 1.05rem;
+    }
+
+    .accordion-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .accordion-item {
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      transition: var(--transition-smooth);
+    }
+
+    .accordion-header {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: var(--radius-md);
+      padding: 20px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      cursor: pointer;
+      text-align: left;
+      color: var(--text-primary);
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 1.25rem;
+      letter-spacing: 0.03em;
+      transition: var(--transition-smooth);
+    }
+
+    .accordion-header:hover {
+      background: rgba(255, 255, 255, 0.06);
+      border-color: rgba(139, 92, 246, 0.3);
+    }
+
+    .accordion-item.active .accordion-header {
+      background: rgba(139, 92, 246, 0.12);
+      border-color: var(--primary);
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    .accordion-icon {
+      width: 20px;
+      height: 20px;
+      flex-shrink: 0;
+      color: var(--accent-gold);
+      transition: transform 0.3s ease;
+    }
+
+    .accordion-item.active .accordion-icon {
+      transform: rotate(180deg);
+    }
+
+    .accordion-body {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s cubic-bezier(0.16, 1, 0.3, 1), padding 0.3s ease;
+      background: rgba(13, 11, 26, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-top: none;
+      border-bottom-left-radius: var(--radius-md);
+      border-bottom-right-radius: var(--radius-md);
+      padding: 0 24px;
+    }
+
+    .accordion-item.active .accordion-body {
+      padding: 20px 24px;
+    }
+
+    .accordion-body p {
+      color: var(--text-muted);
+      font-size: 1rem;
+      line-height: 1.7;
+    }
+
+    /* ── Remove DNS / Reset Section ──────────────────────── */
+    .reset-card {
+      max-width: 900px;
+      margin: 0 auto 60px;
+      padding: 36px;
+      border-color: rgba(232, 201, 135, 0.25);
+      background: rgba(232, 201, 135, 0.02);
+    }
+
+    .reset-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+
+    .reset-icon {
+      font-size: 1.8rem;
+    }
+
+    .reset-header h3 {
+      font-size: 1.6rem;
+      color: var(--accent-gold);
+    }
+
+    .reset-list {
+      padding-left: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      color: var(--text-muted);
+    }
+
+    .reset-list li {
+      font-size: 0.98rem;
+    }
+
+    .reset-list strong {
+      color: var(--text-primary);
+    }
+
+    /* ── CTA Banner ──────────────────────────────────────── */
+    .cta-banner-wrap {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+
+    .cta-banner {
+      padding: 56px 40px;
+      text-align: center;
+      background: radial-gradient(circle at 50% 0%, rgba(139, 92, 246, 0.25), transparent 70%),
+                  rgba(255, 255, 255, 0.03);
+      border: 1px solid rgba(139, 92, 246, 0.35);
+    }
+
+    .cta-banner h2 {
+      font-size: clamp(2rem, 4vw, 2.8rem);
+      margin-bottom: 14px;
+    }
+
+    .cta-banner p {
+      color: var(--text-muted);
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin: 0 auto 30px;
+    }
+
+    .cta-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 16px;
+    }
+
+    /* ── Shared Footer Styling ───────────────────────────── */
+    .footer {
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      background: #050509;
+      padding: 70px 0 30px;
+      margin-top: 60px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 50px;
+    }
+
+    .footer-brand h4 {
+      font-size: 1.8rem;
+      margin-bottom: 12px;
+      background: linear-gradient(135deg, #FFFFFF, var(--secondary));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .footer-brand p {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      margin-bottom: 20px;
+      max-width: 340px;
+    }
+
+    .footer-heading {
+      font-size: 1.15rem;
+      margin-bottom: 20px;
+      color: var(--text-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .footer-links {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .footer-links a {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+    }
+
+    .footer-links a:hover {
+      color: var(--accent-gold);
+      transform: translateX(4px);
+    }
+
+    .payment-badges {
+      display: flex;
+      gap: 10px;
+      margin-top: 16px;
+    }
+
+    .pay-badge {
+      padding: 6px 12px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      border-radius: 6px;
+      font-family: 'Rajdhani', sans-serif;
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: var(--text-primary);
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      padding-top: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+      color: var(--text-muted);
+      font-size: 0.88rem;
+    }
+
+    .social-links {
+      display: flex;
+      gap: 16px;
+    }
+
+    .social-link {
+      color: var(--text-muted);
+      font-size: 1rem;
+      transition: var(--transition-smooth);
+    }
+
+    .social-link:hover {
+      color: var(--secondary);
+    }
+
+    /* ── WhatsApp Float Button ───────────────────────────── */
+    .whatsapp-float {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      width: 60px;
+      height: 60px;
+      background: #25D366;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 24px rgba(37, 211, 102, 0.4);
+      z-index: 999;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .whatsapp-float:hover {
+      transform: scale(1.1);
+      box-shadow: 0 10px 30px rgba(37, 211, 102, 0.6);
+    }
+
+    .whatsapp-float svg {
+      width: 32px;
+      height: 32px;
+      fill: #ffffff;
+    }
+
+    /* ── Toast Container ─────────────────────────────────── */
+    .toast-container {
+      position: fixed;
+      bottom: 100px;
+      right: 28px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 1001;
+      pointer-events: none;
+    }
+
+    .toast {
+      background: rgba(13, 11, 26, 0.95);
+      border: 1px solid var(--accent-gold);
+      backdrop-filter: blur(16px);
+      padding: 12px 20px;
+      border-radius: var(--radius-sm);
+      color: var(--text-primary);
+      font-size: 0.92rem;
+      font-weight: 500;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      pointer-events: auto;
+      animation: toastIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    @keyframes toastIn {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Responsive Queries ──────────────────────────────── */
+    @media (max-width: 992px) {
+      .steps-grid {
+        grid-template-columns: 1fr;
+      }
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .section {
+        padding: 60px 0;
+      }
+      .nav-menu {
+        position: fixed;
+        top: 76px;
+        left: 0;
+        right: 0;
+        background: rgba(7, 7, 13, 0.98);
+        backdrop-filter: blur(24px);
+        flex-direction: column;
+        padding: 30px 24px;
+        gap: 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        transform: translateY(-120%);
+        transition: transform 0.4s ease;
+        opacity: 0;
+        visibility: hidden;
+      }
+      .nav-menu.open {
+        transform: translateY(0);
+        opacity: 1;
+        visibility: visible;
+      }
+      .nav-toggle {
+        display: flex;
+      }
+      .guide-tabs {
+        grid-template-columns: 1fr;
+      }
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+      .cta-banner {
+        padding: 40px 20px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Shared Navbar -->
+  <nav class="navbar" id="navbar">
+    <div class="container navbar-inner">
+      <a href="index.html" class="nav-logo" id="nav-logo">YourBrand</a>
+      <button class="nav-toggle" id="nav-toggle" aria-label="Toggle menu">
+        <span></span><span></span><span></span>
+      </button>
+      <div class="nav-menu" id="nav-menu">
+        <a href="index.html" class="nav-link">Home</a>
+        <a href="index.html#dns-servers" class="nav-link">DNS Servers</a>
+        <a href="ios-guide.html" class="nav-link active">iOS</a>
+        <a href="android-guide.html" class="nav-link">Android</a>
+        <a href="index.html#pricing" class="nav-link">Pricing</a>
+        <a href="index.html#faq" class="nav-link">FAQ</a>
+        <a href="contact.html" class="nav-link">Support</a>
+        <a href="checkout.html" class="btn-gold nav-cta">Get Premium</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content Area -->
+  <main>
+    <!-- Hero Banner -->
+    <header class="section guide-hero reveal">
+      <div class="container">
+        <div class="hero-icon-circle">
+          <!-- Apple SVG Icon -->
+          <svg width="34" height="34" viewBox="0 0 170 170" fill="currentColor">
+            <path d="M150.37 130.25c-2.45 5.66-5.35 10.87-8.71 15.66-4.58 6.53-8.33 11.05-11.22 13.56-4.48 4.12-9.28 6.23-14.42 6.35-3.69 0-8.14-1.05-13.32-3.18-5.19-2.12-9.97-3.17-14.34-3.17-4.58 0-9.49 1.05-14.75 3.17-5.26 2.13-9.5 3.24-12.74 3.35-4.35.13-9.16-1.9-14.42-6.08-3.7-3.04-7.66-7.79-11.89-14.24-7.23-10.98-12.82-23.77-16.78-38.37-3.96-14.6-5.94-28.02-5.94-40.27 0-14.88 3.55-27.42 10.65-37.63 7.1-10.22 16.32-15.42 27.67-15.6 5.34 0 11.19 1.48 17.54 4.44 6.35 2.97 10.4 4.49 12.16 4.57 1.41 0 5.66-1.57 12.74-4.71 7.08-3.14 13.1-4.51 18.06-4.12 13.78.96 24.63 6.01 32.55 15.15-11.98 7.23-17.84 17.2-17.58 29.89.26 10.02 4.15 18.42 11.67 25.2 7.52 6.78 16.58 10.59 27.18 11.43-2.3 7.34-5.24 14.85-8.81 22.53zM119.22 33.02c0-7.39 2.66-14.39 7.98-21 5.32-6.62 11.96-10.96 19.92-13.02.26 1.09.39 2.18.39 3.27 0 7.24-2.81 14.34-8.43 21.3-5.62 6.96-12.44 11.15-20.46 12.56-.26-1.22-.39-2.33-.39-3.32z" fill="#FFFFFF"/>
+          </svg>
+        </div>
+        <div class="hero-badge-wrap">
+          <span>iOS Configuration Guide</span>
+        </div>
+        <h1 class="hero-title">iOS Setup Guide</h1>
+        <p class="hero-subtitle">Configure premium DNS on your iPhone or iPad for lightning-fast matchmaking, lower ping, and rock-solid connection stability.</p>
+        
+        <div class="hero-tags">
+          <span class="hero-tag">⚡ 2-Minute Setup</span>
+          <span class="hero-tag">📶 Wi-Fi & Cellular Ready</span>
+          <span class="hero-tag">🔒 No Jailbreak Required</span>
+          <span class="hero-tag">🎯 PUBG & Free Fire Ready</span>
+        </div>
+      </div>
+    </header>
+
+    <!-- Method Selection Tabs Section -->
+    <section class="section reveal" style="padding-top: 10px;">
+      <div class="container">
+        
+        <div class="guide-tabs-wrapper">
+          <div class="guide-tabs" role="tablist">
+            <button class="guide-tab active" id="tab-wifi" role="tab" aria-selected="true" aria-controls="panel-wifi" data-tab="panel-wifi">
+              <span>📶 Wi-Fi DNS (Manual)</span>
+            </button>
+            <button class="guide-tab" id="tab-profile" role="tab" aria-selected="false" aria-controls="panel-profile" data-tab="panel-profile">
+              <span>🛡️ DNS Profile</span>
+              <span class="tab-badge">Recommended</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- TAB 1: Wi-Fi DNS (Manual) -->
+        <article class="tab-panel active" id="panel-wifi" role="tabpanel" aria-labelledby="tab-wifi">
+          
+          <!-- Mobile Data Notice Callout -->
+          <div class="info-card">
+            <div class="info-icon">ℹ️</div>
+            <div class="info-content">
+              <h4>Wi-Fi Configuration Scope</h4>
+              <p>Manual DNS configuration in iOS applies specifically to the selected Wi-Fi network. If you want DNS optimization enabled system-wide across both <strong>Wi-Fi and Cellular Mobile Data (4G/5G)</strong>, switch to the <strong>DNS Profile</strong> tab above.</p>
+            </div>
+          </div>
+
+          <!-- 8 Step Cards -->
+          <div class="steps-grid">
+            
+            <!-- Step 1 -->
+            <div class="glass-card step-card">
+              <div>
+                <div class="step-header">
+                  <div class="step-badge">1</div>
+                  <h3 class="step-title">Open Settings</h3>
+                </div>
+                <p class="step-description">From your iPhone or iPad home screen, locate and open the standard <strong>Settings</strong> app.</p>
+              </div>
+              <div class="screenshot-placeholder">
+                <svg class="screenshot-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <rect x="5" y="2" width="14" height="20" rx="3"></rect>
+                  <circle cx="12" cy="18" r="1"></circle>
+                </svg>
+                <span class="screenshot-label">Screenshot Placeholder</span>
+                <span class="screenshot-meta">iPhone Settings Home • 300 × 500</span>
+              </div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="glass-card step-card">
+              <div>
+                <div class="step-header">
+                  <div class="step-badge">2</div>
+                  <h3 class="step-title">Tap Wi-Fi</h3>
+                </div>
+                <p class="step-description">In the main Settings menu, tap the <strong>Wi-Fi</strong> section near the top of the screen to view available connections.</p>
+              </div>
+              <div class="screenshot-placeholder">
+                <svg class="screenshot-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M5 12.55a11 11 0 0 1 14.08 0"></path>
+                  <path d="M1.42 9a16 16 0 0 1 21.16 0"></path>
+                  <path d="M8.53 16.11a6 6 0 0 1 6.95 0"></path>
+                  <line x1="12" y1="20" x2="12.01" y2="20"></line>
+                </svg>
+                <span class="screenshot-label">Screenshot Placeholder</span>
+                <span class="screenshot-meta">Wi-Fi Settings Page • 300 × 500</span>
+              </div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="glass-card step-card">
+              <div>
+                <div class="step-header">
+                  <div class="step-badge">3</div>
+                  <h3 class="step-title">Tap the (i) Icon</h3>
+                </div>
+                <p class="step-description">Find your active connected Wi-Fi network (marked with a checkmark) and tap the blue circular <strong>ⓘ (Info)</strong> icon on the far right.</p>
+              </div>
+              <div class="screenshot-placeholder">
+                <svg class="screenshot-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="16" x2="12" y2="12"></line>
+                  <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                </svg>
+                <span class="screenshot-label">Screenshot Placeholder</span>
+                <span class="screenshot-meta">Network Details View • 300 × 500</span>
+              </div>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="glass-card step-card">
+              <div>
+                <div class="step-header">
+                  <div class="step-badge">4</div>
+                  <h3 class="step-title">Tap Configure DNS</h3>
+                </div>
+                <p class="step-description">Scroll down to the bottom of the network configuration screen and tap on <strong>Configure DNS</strong> (which is currently set to 'Automatic').</p>
+              </div>
+              <div class="screenshot-placeholder">
+                <svg class="screenshot-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+                </svg>
+                <span class="screenshot-label">Screenshot Placeholder</span>
+                <span class="screenshot-meta">Configure DNS Row • 300 × 500</span>
+              </div>
+            </div>
+
+            <!-- Step 5 -->
+            <div class="glass-card step-card">
+              <div>
+                <div class="step-header">
+                  <div class="step-badge">5</div>
+                  <h3 class="step-title">Select Manual</h3>
+                </div>
+                <p class="step-description">Change the DNS mode from <strong>Automatic</strong> to <strong>Manual</strong>. The existing DNS servers list and an 'Add Server' option will appear.</p>
+              </div>
+              <div class="screenshot-placeholder">
+                <svg class="screenshot-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                <span class="screenshot-label">Screenshot Placeholder</span>
+                <span class="screenshot-meta">Manual Toggle Selected • 300 × 500</span>
+              </div>
+            </div>
+
+            <!-- Step 6 -->
+            <div class="glass-card step-card">
+              <div>
+                <div class="step-header">
+                  <div class="step-badge">6</div>
+                  <h3 class="step-title">Remove Existing Servers</h3>
+                </div>
+                <p class="step-description">Tap the <strong>red minus icon (-)</strong> next to each existing DNS address, then tap <strong>Delete</strong> to clear out your ISP's default DNS addresses.</p>
+              </div>
+              <div class="screenshot-placeholder">
+                <svg class="screenshot-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="8" y1="12" x2="16" y2="12"></line>
+                </svg>
+                <span class="screenshot-label">Screenshot Placeholder</span>
+                <span class="screenshot-meta">Clear Default DNS Rows • 300 × 500</span>
+              </div>
+            </div>
+
+            <!-- Step 7 -->
+            <div class="glass-card step-card">
+              <div>
+                <div class="step-header">
+                  <div class="step-badge">7</div>
+                  <h3 class="step-title">Add DNS Servers</h3>
+                </div>
+                <p class="step-description">Tap <strong>Add Server</strong> and enter your assigned Primary DNS. Tap <strong>Add Server</strong> again and enter the Secondary DNS. Use your assigned addresses:</p>
+                
+                <!-- DNS Copy Helper -->
+                <div class="inline-dns-box">
+                  <div class="dns-row">
+                    <span class="dns-label">Primary DNS</span>
+                    <div class="dns-value-wrap">
+                      <code class="dns-code" id="ios-primary-dns">103.10.20.1</code>
+                      <button class="btn-copy" onclick="copyDNS('103.10.20.1', this)" aria-label="Copy primary DNS">
+                        <span>Copy</span>
+                      </button>
+                    </div>
+                  </div>
+                  <div class="dns-row">
+                    <span class="dns-label">Secondary DNS</span>
+                    <div class="dns-value-wrap">
+                      <code class="dns-code" id="ios-secondary-dns">103.10.20.2</code>
+                      <button class="btn-copy" onclick="copyDNS('103.10.20.2', this)" aria-label="Copy secondary DNS">
+                        <span>Copy</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="screenshot-placeholder" style="margin-top: 18px;">
+                <svg class="screenshot-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <line x1="12" y1="8" x2="12" y2="16"></line>
+                  <line x1="8" y1="12" x2="16" y2="12"></line>
+                </svg>
+                <span class="screenshot-label">Screenshot Placeholder</span>
+                <span class="screenshot-meta">Entering DNS Addresses • 300 × 500</span>
+              </div>
+            </div>
+
+            <!-- Step 8 -->
+            <div class="glass-card step-card">
+              <div>
+                <div class="step-header">
+                  <div class="step-badge">8</div>
+                  <h3 class="step-title">Tap Save</h3>
+                </div>
+                <p class="step-description">Tap <strong>Save</strong> in the upper right-hand corner. Your iPhone or iPad will now immediately begin routing queries through your premium DNS servers!</p>
+              </div>
+              <div class="screenshot-placeholder">
+                <svg class="screenshot-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
+                  <polyline points="17 21 17 13 7 13 7 21"></polyline>
+                  <polyline points="7 3 7 8 15 8"></polyline>
+                </svg>
+                <span class="screenshot-label">Screenshot Placeholder</span>
+                <span class="screenshot-meta">Save Confirmation • 300 × 500</span>
+              </div>
+            </div>
+
+          </div>
+        </article>
+
+        <!-- TAB 2: DNS Profile (Recommended) -->
+        <article class="tab-panel" id="panel-profile" role="tabpanel" aria-labelledby="tab-profile">
+          
+          <!-- Download Card -->
+          <div class="glass-card profile-hero-card">
+            <svg class="profile-hero-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            <h3>Download Official iOS Configuration Profile</h3>
+            <p>Our signed Apple `.mobileconfig` profile enables encrypted DNS system-wide across both <strong>Wi-Fi</strong> and <strong>Cellular (4G/5G/LTE)</strong> data connections without any battery drain.</p>
+            
+            <a href="#download-profile" class="btn-gold" id="btn-download-profile" onclick="handleProfileDownload(event)">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="7 10 12 15 17 10"></polyline>
+                <line x1="12" y1="15" x2="12" y2="3"></line>
+              </svg>
+              <span>Download DNS Profile (.mobileconfig)</span>
+            </a>
+            <div class="download-note">
+              ⚠️ Note: <strong>Safari</strong> browser must be used to download and prompt the iOS profile installer.
+            </div>
+          </div>
+
+          <!-- 4 Step Cards -->
+          <div class="steps-grid">
+            
+            <!-- Profile Step 1 -->
+            <div class="glass-card step-card">
+              <div>
+                <div class="step-header">
+                  <div class="step-badge">1</div>
+                  <h3 class="step-title">Download in Safari</h3>
+                </div>
+                <p class="step-description">Tap the gold download button above in <strong>Safari</strong>. When iOS asks <em>"This website is trying to download a configuration profile. Do you want to allow this?"</em>, tap <strong>Allow</strong>.</p>
+              </div>
+              <div class="screenshot-placeholder">
+                <svg class="screenshot-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                  <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                  <polyline points="21 15 16 10 5 21"></polyline>
+                </svg>
+                <span class="screenshot-label">Screenshot Placeholder</span>
+                <span class="screenshot-meta">Safari Permission Dialog • 300 × 500</span>
+              </div>
+            </div>
+
+            <!-- Profile Step 2 -->
+            <div class="glass-card step-card">
+              <div>
+                <div class="step-header">
+                  <div class="step-badge">2</div>
+                  <h3 class="step-title">Open Settings</h3>
+                </div>
+                <p class="step-description">Close Safari and open your iOS <strong>Settings</strong> app. You will see a new item banner labeled <strong>"Profile Downloaded"</strong> directly beneath your Apple ID banner.</p>
+              </div>
+              <div class="screenshot-placeholder">
+                <svg class="screenshot-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                  <line x1="16" y1="13" x2="8" y2="13"></line>
+                  <line x1="16" y1="17" x2="8" y2="17"></line>
+                  <polyline points="10 9 9 9 8 9"></polyline>
+                </svg>
+                <span class="screenshot-label">Screenshot Placeholder</span>
+                <span class="screenshot-meta">Profile Downloaded Banner • 300 × 500</span>
+              </div>
+            </div>
+
+            <!-- Profile Step 3 -->
+            <div class="glass-card step-card">
+              <div>
+                <div class="step-header">
+                  <div class="step-badge">3</div>
+                  <h3 class="step-title">Install Profile</h3>
+                </div>
+                <p class="step-description">Tap <strong>"Profile Downloaded"</strong>, then tap <strong>Install</strong> in the upper right. Enter your passcode when prompted and tap <strong>Install</strong> once more to confirm.</p>
+              </div>
+              <div class="screenshot-placeholder">
+                <svg class="screenshot-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                </svg>
+                <span class="screenshot-label">Screenshot Placeholder</span>
+                <span class="screenshot-meta">iOS Install Profile Prompt • 300 × 500</span>
+              </div>
+            </div>
+
+            <!-- Profile Step 4 -->
+            <div class="glass-card step-card">
+              <div>
+                <div class="step-header">
+                  <div class="step-badge">4</div>
+                  <h3 class="step-title">Verify Active State</h3>
+                </div>
+                <p class="step-description">Go to <strong>Settings &gt; General &gt; VPN & Device Management &gt; DNS</strong>. Confirm that <strong>YourBrand Gaming DNS</strong> is checked. All Wi-Fi and mobile data connections are now optimized!</p>
+              </div>
+              <div class="screenshot-placeholder">
+                <svg class="screenshot-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                  <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                </svg>
+                <span class="screenshot-label">Screenshot Placeholder</span>
+                <span class="screenshot-meta">VPN & Device Management Active • 300 × 500</span>
+              </div>
+            </div>
+
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- DNS Address Reference Section -->
+    <section class="section reveal" style="padding-top: 10px;">
+      <div class="container">
+        <div class="glass-card dns-reference-card">
+          <div class="reference-header">
+            <h3>DNS Server Address Reference</h3>
+            <p style="color: var(--text-muted); font-size: 1rem;">
+              After subscribing to a plan, you will receive your assigned DNS addresses via WhatsApp and email. Use these addresses in Step 7 above. Below are example addresses for our network tiers:
+            </p>
+          </div>
+
+          <div class="server-table-grid" id="dns-server-reference-list">
+            
+            <!-- Asia Primary -->
+            <div class="server-card">
+              <div class="server-card-top">
+                <h4 class="server-region-title">🌏 Asia Optimized</h4>
+                <span class="status-badge"><span class="status-dot"></span> Online</span>
+              </div>
+              <div class="inline-dns-box" style="margin-top: 0;">
+                <div class="dns-row">
+                  <span class="dns-label">Primary IP</span>
+                  <div class="dns-value-wrap">
+                    <code class="dns-code">103.10.20.1</code>
+                    <button class="btn-copy" onclick="copyDNS('103.10.20.1', this)">Copy</button>
+                  </div>
+                </div>
+                <div class="dns-row">
+                  <span class="dns-label">Secondary IP</span>
+                  <div class="dns-value-wrap">
+                    <code class="dns-code">103.10.20.2</code>
+                    <button class="btn-copy" onclick="copyDNS('103.10.20.2', this)">Copy</button>
+                  </div>
+                </div>
+                <div class="dns-row">
+                  <span class="dns-label">Hostname</span>
+                  <div class="dns-value-wrap">
+                    <code class="dns-code" style="font-size: 0.85rem;">asia1.yourbrand.dns</code>
+                    <button class="btn-copy" onclick="copyDNS('asia1.yourbrand.dns', this)">Copy</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Middle East -->
+            <div class="server-card">
+              <div class="server-card-top">
+                <h4 class="server-region-title">🕌 Middle East Fast</h4>
+                <span class="status-badge"><span class="status-dot"></span> Online</span>
+              </div>
+              <div class="inline-dns-box" style="margin-top: 0;">
+                <div class="dns-row">
+                  <span class="dns-label">Primary IP</span>
+                  <div class="dns-value-wrap">
+                    <code class="dns-code">185.50.30.1</code>
+                    <button class="btn-copy" onclick="copyDNS('185.50.30.1', this)">Copy</button>
+                  </div>
+                </div>
+                <div class="dns-row">
+                  <span class="dns-label">Secondary IP</span>
+                  <div class="dns-value-wrap">
+                    <code class="dns-code">185.50.30.2</code>
+                    <button class="btn-copy" onclick="copyDNS('185.50.30.2', this)">Copy</button>
+                  </div>
+                </div>
+                <div class="dns-row">
+                  <span class="dns-label">Hostname</span>
+                  <div class="dns-value-wrap">
+                    <code class="dns-code" style="font-size: 0.85rem;">me1.yourbrand.dns</code>
+                    <button class="btn-copy" onclick="copyDNS('me1.yourbrand.dns', this)">Copy</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Global Anycast -->
+            <div class="server-card">
+              <div class="server-card-top">
+                <h4 class="server-region-title">🌐 Global Anycast</h4>
+                <span class="status-badge"><span class="status-dot"></span> Online</span>
+              </div>
+              <div class="inline-dns-box" style="margin-top: 0;">
+                <div class="dns-row">
+                  <span class="dns-label">Primary IP</span>
+                  <div class="dns-value-wrap">
+                    <code class="dns-code">45.60.70.1</code>
+                    <button class="btn-copy" onclick="copyDNS('45.60.70.1', this)">Copy</button>
+                  </div>
+                </div>
+                <div class="dns-row">
+                  <span class="dns-label">Secondary IP</span>
+                  <div class="dns-value-wrap">
+                    <code class="dns-code">45.60.70.2</code>
+                    <button class="btn-copy" onclick="copyDNS('45.60.70.2', this)">Copy</button>
+                  </div>
+                </div>
+                <div class="dns-row">
+                  <span class="dns-label">Hostname</span>
+                  <div class="dns-value-wrap">
+                    <code class="dns-code" style="font-size: 0.85rem;">global.yourbrand.dns</code>
+                    <button class="btn-copy" onclick="copyDNS('global.yourbrand.dns', this)">Copy</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Troubleshooting Accordion -->
+    <section class="section reveal" style="padding-top: 0;">
+      <div class="container troubleshoot-wrap">
+        <div class="section-heading-center">
+          <h2>iOS Troubleshooting</h2>
+          <p>Quick fixes for common issues when setting up DNS on Apple devices.</p>
+        </div>
+
+        <div class="accordion-list" id="ios-troubleshooting">
+          
+          <!-- Item 1 -->
+          <div class="glass-card accordion-item">
+            <button class="accordion-header" type="button" aria-expanded="false">
+              <span>DNS settings reset after reconnecting to Wi-Fi</span>
+              <svg class="accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+            <div class="accordion-body">
+              <p>This can happen on some iOS versions when 'Private Wi-Fi Address' changes MAC addresses or after network reconnections. We strongly recommend using the <strong>DNS Profile</strong> method for persistent, permanent settings that remain active across reconnections.</p>
+            </div>
+          </div>
+
+          <!-- Item 2 -->
+          <div class="glass-card accordion-item">
+            <button class="accordion-header" type="button" aria-expanded="false">
+              <span>Cannot browse or access the internet after changing DNS</span>
+              <svg class="accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+            <div class="accordion-body">
+              <p>Double-check the DNS addresses to ensure there are no accidental spaces or typing errors. If the issue persists, revert Configure DNS to 'Automatic' and contact our WhatsApp support team with your order TID for instant server status verification.</p>
+            </div>
+          </div>
+
+          <!-- Item 3 -->
+          <div class="glass-card accordion-item">
+            <button class="accordion-header" type="button" aria-expanded="false">
+              <span>Configuration Profile fails to install or download</span>
+              <svg class="accordion-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </button>
+            <div class="accordion-body">
+              <p>Make sure you are downloading the profile using <strong>Safari</strong>. Third-party iOS browsers (Chrome, Edge, Firefox, Brave) do not have Apple permissions to trigger the iOS configuration profile installer.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- Remove DNS / Reset Section -->
+    <section class="section reveal" style="padding-top: 0;">
+      <div class="container">
+        <div class="glass-card reset-card">
+          <div class="reset-header">
+            <span class="reset-icon">⚠️</span>
+            <h3>How to Remove DNS / Reset to Default</h3>
+          </div>
+          <p style="color: var(--text-muted); margin-bottom: 16px; font-size: 0.98rem;">
+            If you ever need to restore your iPhone or iPad back to factory network defaults, follow these simple steps:
+          </p>
+          <ol class="reset-list">
+            <li><strong>For Wi-Fi Manual DNS:</strong> Go to <strong>Settings &gt; Wi-Fi</strong>, tap the blue <strong>ⓘ</strong> next to your network, tap <strong>Configure DNS</strong>, and select <strong>Automatic</strong>. Tap <strong>Save</strong> in the top-right corner.</li>
+            <li><strong>For DNS Profile:</strong> Go to <strong>Settings &gt; General &gt; VPN & Device Management</strong>, select the <strong>YourBrand Gaming DNS Profile</strong>, and tap <strong>Remove Profile</strong>. Confirm with your passcode.</li>
+            <li>Once removed, your device will immediately return to your ISP's original DNS settings without any restart needed.</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Banner -->
+    <section class="section guide-cta reveal" style="padding-top: 0;">
+      <div class="container cta-banner-wrap">
+        <div class="glass-card cta-banner">
+          <h2>Ready to Supercharge Your Ping?</h2>
+          <p>Get instant access to our dedicated gaming DNS servers optimized for Pakistani ISPs and Middle Eastern gaming routes.</p>
+          <div class="cta-buttons">
+            <a href="checkout.html" class="btn-gold">Get Premium DNS</a>
+            <a href="android-guide.html" class="btn-secondary">
+              <span>View Android Guide</span>
+              <span>&rarr;</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Shared Footer -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        
+        <!-- Brand Column -->
+        <div class="footer-brand">
+          <h4 id="footer-logo">YourBrand</h4>
+          <p id="footer-tagline">Premium gaming-optimized DNS service for mobile gamers. Faster lookups, optimized routing, and rock-solid latency.</p>
+          <div class="payment-badges">
+            <span class="pay-badge">📱 Easypaisa</span>
+            <span class="pay-badge">📲 JazzCash</span>
+          </div>
+        </div>
+
+        <!-- Guides & Servers -->
+        <div>
+          <h5 class="footer-heading">Setup Guides</h5>
+          <ul class="footer-links">
+            <li><a href="ios-guide.html">iOS Setup (iPhone/iPad)</a></li>
+            <li><a href="android-guide.html">Android Setup Guide</a></li>
+            <li><a href="index.html#dns-servers">DNS Server Status</a></li>
+            <li><a href="index.html#pricing">Pricing & Plans</a></li>
+          </ul>
+        </div>
+
+        <!-- Quick Links -->
+        <div>
+          <h5 class="footer-heading">Customer Service</h5>
+          <ul class="footer-links">
+            <li><a href="checkout.html">Get Premium DNS</a></li>
+            <li><a href="order-tracking.html">Track Order Status</a></li>
+            <li><a href="contact.html">Contact & Support</a></li>
+            <li><a href="index.html#faq">Frequently Asked Questions</a></li>
+          </ul>
+        </div>
+
+        <!-- Legal -->
+        <div>
+          <h5 class="footer-heading">Legal & Policies</h5>
+          <ul class="footer-links">
+            <li><a href="terms.html">Terms of Service</a></li>
+            <li><a href="privacy.html">Privacy Policy</a></li>
+            <li><a href="refund.html">Refund Policy</a></li>
+          </ul>
+          <div style="margin-top: 20px;">
+            <p style="font-size: 0.82rem; color: var(--text-muted);" id="support-hours">Support: Mon – Sun, 10 AM – 12 AM (PKT)</p>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Bottom Bar -->
+      <div class="footer-bottom">
+        <div>
+          &copy; <span id="copyright-year">2026</span> <span id="copyright-brand">YourBrand</span>. All rights reserved. Built for competitive mobile gamers.
+        </div>
+        <div class="social-links" id="social-links-wrap">
+          <a href="https://instagram.com/yourbrand" target="_blank" class="social-link" aria-label="Instagram">Instagram</a>
+          <a href="https://discord.gg/yourbrand" target="_blank" class="social-link" aria-label="Discord">Discord</a>
+          <a href="https://youtube.com/@yourbrand" target="_blank" class="social-link" aria-label="YouTube">YouTube</a>
+          <a href="https://twitter.com/yourbrand" target="_blank" class="social-link" aria-label="Twitter">Twitter</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- WhatsApp Floating Button -->
+  <a href="https://wa.me/923001234567" target="_blank" class="whatsapp-float" id="whatsapp-float-link" aria-label="Chat on WhatsApp">
+    <svg viewBox="0 0 24 24">
+      <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.007c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.86.173.086.275.072.376-.044.101-.116.433-.506.549-.68.116-.173.231-.145.39-.087s1.011.477 1.184.564c.173.087.289.13.332.203.043.072.043.419-.101.824z"/>
+    </svg>
+  </a>
+
+  <!-- Toast Container -->
+  <div id="toast-container" class="toast-container" aria-live="polite"></div>
+
+  <!-- Scripts -->
+  <script src="js/config.js"></script>
+  <script src="js/components.js"></script>
+  <script src="js/animations.js"></script>
+
+  <script>
+    /**
+     * Inline Controller for iOS Setup Guide
+     * Handles tabs, accordion, clipboard copy, and dynamic config population
+     */
+    document.addEventListener('DOMContentLoaded', () => {
+      
+      // 1. Populate dynamic brand data from SITE_CONFIG if present
+      if (window.SITE_CONFIG) {
+        const cfg = window.SITE_CONFIG;
+        
+        if (cfg.brand) {
+          const brandName = cfg.brand.name || "YourBrand";
+          document.title = `iOS Setup Guide — ${brandName}`;
+          
+          const navLogo = document.getElementById('nav-logo');
+          if (navLogo) navLogo.textContent = brandName;
+          
+          const footerLogo = document.getElementById('footer-logo');
+          if (footerLogo) footerLogo.textContent = brandName;
+
+          const copyBrand = document.getElementById('copyright-brand');
+          if (copyBrand) copyBrand.textContent = brandName;
+
+          const copyYear = document.getElementById('copyright-year');
+          if (copyYear && cfg.brand.copyrightYear) copyYear.textContent = cfg.brand.copyrightYear;
+
+          const tagline = document.getElementById('footer-tagline');
+          if (tagline && cfg.brand.description) tagline.textContent = cfg.brand.description;
+
+          const hours = document.getElementById('support-hours');
+          if (hours && cfg.brand.supportHours) hours.textContent = `Support: ${cfg.brand.supportHours}`;
+
+          if (cfg.brand.whatsappNumber) {
+            const cleanNumber = cfg.brand.whatsappNumber.replace(/[^0-9]/g, '');
+            const waFloat = document.getElementById('whatsapp-float-link');
+            if (waFloat) waFloat.href = `https://wa.me/${cleanNumber}`;
+          }
+        }
+
+        // Populate first DNS server IP if available
+        if (cfg.dnsServers && cfg.dnsServers.length > 0) {
+          const firstRegion = cfg.dnsServers[0];
+          if (firstRegion.servers && firstRegion.servers.length > 0) {
+            const s1 = firstRegion.servers[0];
+            const pElem = document.getElementById('ios-primary-dns');
+            const sElem = document.getElementById('ios-secondary-dns');
+            if (pElem && s1.primary) pElem.textContent = s1.primary;
+            if (sElem && s1.secondary) sElem.textContent = s1.secondary;
+          }
+        }
+      }
+
+      // 2. Tab Switching Logic
+      const tabs = document.querySelectorAll('.guide-tab');
+      const panels = document.querySelectorAll('.tab-panel');
+
+      tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+          const targetId = tab.getAttribute('data-tab');
+          
+          // Remove active from all tabs & panels
+          tabs.forEach(t => {
+            t.classList.remove('active');
+            t.setAttribute('aria-selected', 'false');
+          });
+          panels.forEach(p => {
+            p.classList.remove('active');
+          });
+
+          // Activate clicked tab and targeted panel
+          tab.classList.add('active');
+          tab.setAttribute('aria-selected', 'true');
+          const activePanel = document.getElementById(targetId);
+          if (activePanel) {
+            activePanel.classList.add('active');
+          }
+        });
+      });
+
+      // 3. Troubleshooting Accordion Logic
+      const accordionItems = document.querySelectorAll('#ios-troubleshooting .accordion-item');
+      accordionItems.forEach(item => {
+        const header = item.querySelector('.accordion-header');
+        const body = item.querySelector('.accordion-body');
+
+        header.addEventListener('click', () => {
+          const isOpen = item.classList.contains('active');
+
+          // Close all accordion items
+          accordionItems.forEach(otherItem => {
+            otherItem.classList.remove('active');
+            const otherHeader = otherItem.querySelector('.accordion-header');
+            const otherBody = otherItem.querySelector('.accordion-body');
+            if (otherHeader) otherHeader.setAttribute('aria-expanded', 'false');
+            if (otherBody) otherBody.style.maxHeight = null;
+          });
+
+          // Toggle clicked item
+          if (!isOpen) {
+            item.classList.add('active');
+            header.setAttribute('aria-expanded', 'true');
+            body.style.maxHeight = body.scrollHeight + 40 + 'px';
+          }
+        });
+      });
+
+      // 4. Mobile Navigation Toggle
+      const navToggle = document.getElementById('nav-toggle');
+      const navMenu = document.getElementById('nav-menu');
+      if (navToggle && navMenu) {
+        navToggle.addEventListener('click', () => {
+          navMenu.classList.toggle('open');
+        });
+      }
+
+      // 5. Scroll Reveal Intersection Observer
+      const reveals = document.querySelectorAll('.reveal');
+      if ('IntersectionObserver' in window) {
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add('active');
+              observer.unobserve(entry.target);
+            }
+          });
+        }, { threshold: 0.1 });
+
+        reveals.forEach(el => observer.observe(el));
+      } else {
+        reveals.forEach(el => el.classList.add('active'));
+      }
+    });
+
+    // Global copy helper for buttons
+    function copyDNS(text, btnElement) {
+      if (window.copyToClipboard && typeof window.copyToClipboard === 'function') {
+        window.copyToClipboard(text, btnElement);
+        return;
+      }
+
+      // Fallback clipboard logic
+      navigator.clipboard.writeText(text).then(() => {
+        showToast(`Copied to clipboard: ${text}`);
+        if (btnElement) {
+          const orig = btnElement.innerHTML;
+          btnElement.innerHTML = '✓ Copied';
+          btnElement.style.background = 'var(--success)';
+          btnElement.style.color = '#07070D';
+          setTimeout(() => {
+            btnElement.innerHTML = orig;
+            btnElement.style.background = '';
+            btnElement.style.color = '';
+          }, 2000);
+        }
+      }).catch(err => {
+        showToast(`Error copying: ${text}`);
+      });
+    }
+
+    // Download Profile Trigger Handler
+    function handleProfileDownload(e) {
+      e.preventDefault();
+      showToast("Downloading iOS DNS configuration profile...");
+      setTimeout(() => {
+        alert("DNS Profile (.mobileconfig) download ready! Place your production .mobileconfig file in the website root to enable direct one-click downloads.");
+      }, 500);
+    }
+
+    // Toast Notification helper
+    function showToast(message) {
+      const container = document.getElementById('toast-container');
+      if (!container) return;
+      
+      const toast = document.createElement('div');
+      toast.className = 'toast';
+      toast.innerHTML = `<span>⚡</span><span>${message}</span>`;
+      container.appendChild(toast);
+
+      setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(10px)';
+        toast.style.transition = 'all 0.3s ease';
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+  </script>
+</body>
+</html>

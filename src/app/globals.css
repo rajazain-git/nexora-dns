@@ -1,0 +1,230 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --background: #080D1A;
+  --background-secondary: #0B1224;
+  --foreground: #F1F5F9;
+  --surface: #0B1224;
+  --surface-elevated: rgba(255, 255, 255, 0.08);
+  --glass-surface: rgba(255, 255, 255, 0.06);
+  --glass-surface-strong: rgba(255, 255, 255, 0.10);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-border-strong: rgba(255, 255, 255, 0.20);
+  --accent-cyan: #00E5FF;
+  --accent-violet: #8B5CF6;
+  --border: rgba(255, 255, 255, 0.12);
+  --muted: #94A3B8;
+  --radius-btn: 10px;
+  --radius-card: 16px;
+}
+
+body {
+  color: var(--foreground);
+  background: var(--background);
+  font-family: var(--font-inter), system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  overflow-x: hidden;
+  selection-background-color: #00E5FF;
+  selection-color: #080D1A;
+  min-height: 100vh;
+}
+
+::selection {
+  background: #00E5FF;
+  color: #080D1A;
+}
+
+/* Technical glass scrollbar */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: #080D1A;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 9999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #00E5FF;
+  box-shadow: 0 0 10px rgba(0, 229, 255, 0.5);
+}
+
+/* Background Grids & Ambient Lighting */
+.tech-grid {
+  background-size: 44px 44px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+}
+
+.tech-grid-cyan {
+  background-size: 48px 48px;
+  background-image: 
+    linear-gradient(to right, rgba(0, 229, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 229, 255, 0.05) 1px, transparent 1px);
+}
+
+.tech-grid-violet {
+  background-size: 56px 56px;
+  background-image: 
+    linear-gradient(to right, rgba(139, 92, 246, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(139, 92, 246, 0.05) 1px, transparent 1px);
+}
+
+/* Ambient luminous auras for glass depth */
+.ambient-glow-cyan {
+  background: radial-gradient(circle at 50% 30%, rgba(0, 229, 255, 0.12) 0%, rgba(8, 13, 26, 0) 70%);
+}
+
+.ambient-glow-violet {
+  background: radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.10) 0%, rgba(8, 13, 26, 0) 65%);
+}
+
+/* =====================================================
+   GLASSMORPHISM CORE COMPONENTS & UTILITIES
+   ===================================================== */
+
+/* Standard Translucent Glass Surface */
+.glass-panel,
+.glass-card {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37), inset 0 1px 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+/* Elevated / Strong Glass Surface */
+.glass-panel-elevated,
+.glass-card-strong {
+  background: rgba(255, 255, 255, 0.10);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.45), inset 0 1px 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+/* Subtle Glass Surface for subtle backgrounds & nested elements */
+.glass-subtle {
+  background: rgba(255, 255, 255, 0.035);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Floating Glass Navigation Header */
+.glass-nav {
+  background: rgba(8, 13, 26, 0.72);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.35), inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
+}
+
+/* Interactive Glass Cards with specular hover transitions */
+.glass-interactive {
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.glass-interactive:hover {
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(0, 229, 255, 0.38);
+  box-shadow: 0 12px 40px 0 rgba(0, 229, 255, 0.14), inset 0 1px 1px 0 rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+}
+
+.glass-interactive-violet:hover {
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(139, 92, 246, 0.45);
+  box-shadow: 0 12px 40px 0 rgba(139, 92, 246, 0.14), inset 0 1px 1px 0 rgba(255, 255, 255, 0.25);
+  transform: translateY(-2px);
+}
+
+/* Cyan & Violet Tinted Glass Surfaces */
+.glass-panel-cyan {
+  background: rgba(0, 229, 255, 0.06);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(0, 229, 255, 0.30);
+  box-shadow: 0 8px 32px 0 rgba(0, 229, 255, 0.15), inset 0 1px 1px 0 rgba(255, 255, 255, 0.20);
+}
+
+.glass-panel-violet {
+  background: rgba(139, 92, 246, 0.06);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(139, 92, 246, 0.30);
+  box-shadow: 0 8px 32px 0 rgba(139, 92, 246, 0.15), inset 0 1px 1px 0 rgba(255, 255, 255, 0.20);
+}
+
+/* Glass Inputs & Form Controls */
+.glass-input {
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #F1F5F9;
+  transition: all 0.2s ease;
+}
+
+.glass-input:focus {
+  background: rgba(255, 255, 255, 0.08);
+  border-color: #00E5FF;
+  box-shadow: 0 0 16px rgba(0, 229, 255, 0.25), inset 0 1px 1px 0 rgba(255, 255, 255, 0.10);
+  outline: none;
+}
+
+/* Glass Pills & Badges */
+.glass-pill {
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.10);
+}
+
+/* Fallback for environments where backdrop-filter is unsupported */
+@supports not (backdrop-filter: blur(16px)) {
+  .glass-panel,
+  .glass-card,
+  .glass-panel-cyan,
+  .glass-panel-violet,
+  .glass-subtle,
+  .glass-input,
+  .glass-nav {
+    background: #0B1224;
+  }
+}
+
+/* Accessibility: Respect Reduced-Motion Preferences */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Subtle Network Node Glow Animation */
+@keyframes cyanPulse {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(0, 229, 255, 0.25);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(0, 229, 255, 0.55);
+  }
+}
+
+.pulse-cyan-glow {
+  animation: cyanPulse 3s infinite ease-in-out;
+}

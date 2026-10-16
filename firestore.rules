@@ -1,0 +1,72 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Helper function to check if request is from authenticated administrator
+    function isAdmin() {
+      return request.auth != null && (
+        request.auth.token.email.matches('(?i)(admin@nexoradns\\.com|zain@nexoradns\\.com)') ||
+        request.auth.token.role == 'admin'
+      );
+    }
+
+    // 1. Published Products (Public read for Free Fire mobile packages, Admin write only)
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // 2. Published Site Settings (Public read, Admin write only)
+    match /settings/{docId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // 3. Draft Settings & Versions (Admin read/write only)
+    match /settings_drafts/{docId} {
+      allow read, write: if isAdmin();
+    }
+    match /settings_versions/{versionId} {
+      allow read, write: if isAdmin();
+    }
+
+    // 4. Coupons (Public validate via server API, Admin write only)
+    match /coupons/{couponCode} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // 5. Orders & Payments (Guest/Customer checkout write, Admin full management)
+    match /orders/{orderId} {
+      // Guest or customer can create an order with status 'pending'
+      allow create: if request.resource.data.paymentStatus in ['pending', 'verified'];
+      // Customer can read order if customerId matches or provided orderId
+      allow read: if isAdmin() || (request.auth != null && request.auth.uid == resource.data.customerId);
+      // Status updates and verification strictly restricted to admin
+      allow update, delete: if isAdmin();
+    }
+
+    // 6. Support Tickets
+    match /support_tickets/{ticketId} {
+      allow create: if true;
+      allow read: if isAdmin() || (request.auth != null && request.auth.uid == resource.data.customerId);
+      allow update: if isAdmin() || (request.auth != null && request.auth.uid == resource.data.customerId);
+      allow delete: if isAdmin();
+    }
+
+    // 7. Audit Logs & System Telemetry (Admin read/write only)
+    match /audit_logs/{logId} {
+      allow read, write: if isAdmin();
+    }
+
+    // 8. User Profiles
+    match /users/{userId} {
+      allow read: if request.auth != null && (request.auth.uid == userId || isAdmin());
+      // Prohibit setting 'role': 'admin' directly from client
+      allow write: if request.auth != null && (
+        (request.auth.uid == userId && request.resource.data.role != 'admin') ||
+        isAdmin()
+      );
+    }
+  }
+}
