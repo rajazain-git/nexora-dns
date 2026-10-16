@@ -72,7 +72,7 @@ export function Logo({ size = 'md', brandName, showTagline = false }: LogoProps)
           <span className={`font-black tracking-widest uppercase text-[#00E5FF] font-sans ${sizeMap[size].text}`}>
             {subName}
           </span>
-          <span className={`bg-[#00E5FF]/10 text-[#00E5FF] border border-[#00E5FF]/30 rounded font-mono font-bold uppercase tracking-wider ${sizeMap[size].badge}`}>
+          <span className={`hidden 2xl:inline-block bg-[#00E5FF]/10 text-[#00E5FF] border border-[#00E5FF]/30 rounded font-mono font-bold uppercase tracking-wider ${sizeMap[size].badge}`}>
             NETWORK
           </span>
         </div>
