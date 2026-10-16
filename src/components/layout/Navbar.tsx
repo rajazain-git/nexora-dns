@@ -62,20 +62,20 @@ export function Navbar() {
 
       {/* Main Floating Glass Navbar */}
       <header className="sticky top-0 z-40 w-full bg-[#080D1A]/75 backdrop-blur-2xl border-b border-white/[0.10] shadow-[0_8px_32px_0_rgba(0,0,0,0.37),inset_0_1px_0_0_rgba(255,255,255,0.08)] transition-all">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-2 lg:gap-3 xl:gap-4">
           
           {/* Brand Logo */}
           <Logo size="md" showTagline={false} />
 
           {/* Desktop Navigation Links */}
-          <nav className="hidden lg:flex items-center gap-1 xl:gap-2 p-1.5 rounded-xl bg-white/[0.03] border border-white/[0.06] backdrop-blur-md">
+          <nav className="hidden lg:flex items-center gap-0.5 xl:gap-1.5 p-1 xl:p-1.5 rounded-xl bg-white/[0.03] border border-white/[0.06] backdrop-blur-md shrink-0">
             {navLinks.map((link) => {
               const active = isActive(link.href);
               return (
                 <Link
                   key={link.name}
                   href={link.href}
-                  className={`px-3.5 py-2 text-xs font-bold uppercase tracking-wider transition-all rounded-lg relative ${
+                  className={`px-2.5 xl:px-3.5 py-1.5 xl:py-2 text-[11px] xl:text-xs font-bold uppercase tracking-wider transition-all rounded-lg relative ${
                     active
                       ? 'text-[#F1F5F9] bg-white/[0.08] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.15)] border border-white/[0.14]'
                       : 'text-[#94A3B8] hover:text-[#F1F5F9] hover:bg-white/[0.05]'
@@ -83,7 +83,7 @@ export function Navbar() {
                 >
                   {link.name}
                   {active && (
-                    <span className="absolute bottom-0 left-3 right-3 h-0.5 bg-[#00E5FF] shadow-[0_0_8px_#00E5FF]" />
+                    <span className="absolute bottom-0 left-2.5 right-2.5 xl:left-3 xl:right-3 h-0.5 bg-[#00E5FF] shadow-[0_0_8px_#00E5FF]" />
                   )}
                 </Link>
               );
@@ -91,10 +91,10 @@ export function Navbar() {
           </nav>
 
           {/* Right Action Stack */}
-          <div className="flex items-center gap-2.5 sm:gap-3.5">
+          <div className="flex items-center gap-1.5 sm:gap-2.5 lg:gap-3 shrink-0">
             
-            {/* Anycast Health Pill */}
-            <div className="hidden xl:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/[0.05] border border-white/[0.12] backdrop-blur-md text-[10px] font-mono font-bold text-[#00E5FF] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)]">
+            {/* Anycast Health Pill - only on extra wide screens (2xl) so laptop navbar doesn't overflow */}
+            <div className="hidden 2xl:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-white/[0.05] border border-white/[0.12] backdrop-blur-md text-[10px] font-mono font-bold text-[#00E5FF] shadow-[inset_0_1px_0_0_rgba(255,255,255,0.08)]">
               <span className="w-1.5 h-1.5 rounded-full bg-[#00E5FF] shadow-[0_0_6px_#00E5FF] animate-pulse" />
               <span>ANYCAST 28 NODES ACTIVE</span>
             </div>
@@ -142,17 +142,17 @@ export function Navbar() {
               {user ? (
                 <button
                   onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
-                  className="flex items-center gap-2 p-1.5 pr-2.5 rounded-lg bg-white/[0.06] hover:bg-white/[0.10] border border-white/[0.12] backdrop-blur-md text-[#F1F5F9] transition-all text-xs shadow-[inset_0_1px_0_0_rgba(255,255,255,0.10)]"
+                  className="flex items-center gap-1.5 sm:gap-2 p-1.5 pr-2 sm:pr-2.5 rounded-lg bg-white/[0.06] hover:bg-white/[0.10] border border-white/[0.12] backdrop-blur-md text-[#F1F5F9] transition-all text-xs shadow-[inset_0_1px_0_0_rgba(255,255,255,0.10)]"
                 >
-                  <div className={`w-7 h-7 rounded-md flex items-center justify-center text-xs font-bold font-mono ${
+                  <div className={`w-7 h-7 rounded-md flex items-center justify-center text-xs font-bold font-mono shrink-0 ${
                     isAdmin ? 'bg-[#8B5CF6]/20 text-[#C4B5FD] border border-[#8B5CF6]/40' : 'bg-[#00E5FF]/20 text-[#00E5FF] border border-[#00E5FF]/40'
                   }`}>
                     {user.displayName.charAt(0).toUpperCase()}
                   </div>
-                  <span className="hidden md:inline-block max-w-[100px] truncate font-medium text-[#F1F5F9]">
+                  <span className="hidden md:inline-block max-w-[70px] lg:max-w-[85px] xl:max-w-[110px] truncate font-medium text-[#F1F5F9]">
                     {user.displayName}
                   </span>
-                  <ChevronDown className="w-3.5 h-3.5 text-[#94A3B8]" />
+                  <ChevronDown className="w-3.5 h-3.5 text-[#94A3B8] shrink-0" />
                 </button>
               ) : (
                 <Link href="/login">
@@ -166,7 +166,7 @@ export function Navbar() {
               {/* User Dropdown */}
               {user && isUserDropdownOpen && (
                 <div 
-                  className="absolute right-0 mt-2 w-64 rounded-2xl bg-[#0B1224]/90 backdrop-blur-2xl border border-white/[0.14] shadow-[0_16px_48px_0_rgba(0,0,0,0.5),inset_0_1px_0_0_rgba(255,255,255,0.15)] py-2 z-50 divide-y divide-white/[0.08] font-sans"
+                  className="absolute right-0 mt-2 w-64 max-w-[calc(100vw-1.5rem)] rounded-2xl bg-[#0B1224]/95 backdrop-blur-2xl border border-white/[0.14] shadow-[0_16px_48px_0_rgba(0,0,0,0.5),inset_0_1px_0_0_rgba(255,255,255,0.15)] py-2 z-50 divide-y divide-white/[0.08] font-sans origin-top-right"
                   onMouseLeave={() => setIsUserDropdownOpen(false)}
                 >
                   <div className="px-4 py-2.5">
@@ -221,7 +221,7 @@ export function Navbar() {
                           switchDemoRole('customer');
                           setIsUserDropdownOpen(false);
                         }}
-                        className={`text-[11px] py-1 px-2 rounded-lg font-mono font-bold transition-all border ${
+                        className={`text-[10px] sm:text-[11px] py-1 px-1.5 sm:px-2 rounded-lg font-mono font-bold transition-all border truncate text-center ${
                           !isAdmin 
                             ? 'bg-[#00E5FF]/20 text-[#00E5FF] border-[#00E5FF]/40 shadow-[0_0_8px_rgba(0,229,255,0.2)]' 
                             : 'bg-white/[0.05] text-[#94A3B8] border-white/[0.10] hover:text-white'
@@ -234,7 +234,7 @@ export function Navbar() {
                           switchDemoRole('admin');
                           setIsUserDropdownOpen(false);
                         }}
-                        className={`text-[11px] py-1 px-2 rounded-lg font-mono font-bold transition-all border ${
+                        className={`text-[10px] sm:text-[11px] py-1 px-1.5 sm:px-2 rounded-lg font-mono font-bold transition-all border truncate text-center ${
                           isAdmin 
                             ? 'bg-[#8B5CF6]/20 text-[#C4B5FD] border-[#8B5CF6]/40 shadow-[0_0_8px_rgba(139,92,246,0.2)]' 
                             : 'bg-white/[0.05] text-[#94A3B8] border-white/[0.10] hover:text-white'
