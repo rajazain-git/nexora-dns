@@ -6,8 +6,11 @@ import { Badge } from '@/components/ui/Badge';
 import { ShieldCheck, HelpCircle, ArrowRight, Zap, CheckCircle2 } from 'lucide-react';
 
 export const metadata: Metadata = {
-  title: 'Device Compatibility Checker | Free Fire Mobile DNS | NEXORA',
-  description: 'Verify native DNS protocol support for your Android or Apple iOS device. Check compatibility for Android Private DNS (DoT) and Apple DoH profiles.',
+  title: 'Device & Carrier Compatibility Matrix | Free Fire DNS',
+  description: 'Verify native DNS protocol support for your Android or Apple iOS device. Check compatibility for Android Private DNS (DoT) and Apple DoH profiles across Jazz, Zong, Telenor, and Ufone.',
+  alternates: {
+    canonical: '/compatibility',
+  },
 };
 
 export default function CompatibilityPage() {
